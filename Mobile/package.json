@@ -1,0 +1,40 @@
+{
+  "name": "MelonInterfaceMobile",
+  "version": "0.0.1",
+  "author": {
+    "name": "Kunal Sachdeva",
+    "email": "kunsachdeva@gmai.com"
+  },
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "patch": "react-native link react-native-fs && react-native link react-native-tls && react-native link react-native-randombytes && sed -i.bk 's/${Contracts.//' node_modules/@melonproject/protocol/lib/Contracts.js && sed -i.bk 's/}.abi.json/.abi.json/' node_modules/@melonproject/protocol/lib/Contracts.js && sed -i.bk 's/${deploymentId}.json/kovan-kyberPrice.json/' node_modules/@melonproject/protocol/lib/utils/environment/withDeployment.js"
+  },
+  "dependencies": {
+    "@melonproject/protocol": "^1.0.0-patched-1",
+    "@melonproject/token-math": "^0.1.6",
+    "expect": "^24.8.0",
+    "node-libs-react-native": "git+https://github.com/kunsachdeva/node-libs-react-native.git",
+    "react": "16.8.3",
+    "react-native": "0.59.8",
+    "react-native-gesture-handler": "^1.4.1",
+    "react-navigation": "^4.0.10",
+    "react-navigation-stack": "^1.9.1",
+    "stream-browserify": "^2.0.2",
+    "vm-browserify": "^1.1.0",
+    "web3": "^1.0.0-beta.37",
+    "web3-eth-accounts": "^1.0.0-beta.37"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/runtime": "^7.4.5",
+    "babel-jest": "^24.8.0",
+    "jest": "^24.8.0",
+    "metro-react-native-babel-preset": "^0.54.1",
+    "react-test-renderer": "16.8.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

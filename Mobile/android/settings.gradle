@@ -1,0 +1,9 @@
+rootProject.name = 'MelonInterfaceMobile'
+include ':react-native-randombytes'
+project(':react-native-randombytes').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-randombytes/android')
+include ':react-native-fs'
+project(':react-native-fs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fs/android')
+include ':react-native-tls'
+project(':react-native-tls').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-tls/android')
+
+include ':app'
