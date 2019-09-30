@@ -3,6 +3,7 @@ package com.meloninterfacemobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.rnfs.RNFSPackage;
 import com.peel.react.TcpSocketsModule;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNGestureHandlerPackage(),
             new RandomBytesPackage(),
             new RNFSPackage(),
             new TcpSocketsModule()

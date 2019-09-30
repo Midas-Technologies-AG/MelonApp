@@ -10,6 +10,8 @@ react-native link react-native-tls
 
 react-native link react-native-randombytes   
 
+react-native link react-native-gesture-handler
+
 sed -i.bk 's/${Contracts.//' node_modules/@melonproject/protocol/lib/Contracts.js  
 
 sed -i.bk 's/}.abi.json/.abi.json/' node_modules/@melonproject/protocol/lib/Contracts.js    
