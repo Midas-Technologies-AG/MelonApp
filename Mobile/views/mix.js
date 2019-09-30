@@ -6,17 +6,16 @@ import { getAllAssets } from '../wrapper/melon';
 
 export default class Mix extends Component {
   state = { assets: [] }
- 
+
   async componentDidMount() {
     var assets = await getAllAssets();
-    console.warn(assets);
+    this.setState((prevState, props) => Object.assign({}, prevState, { assets }))
   }
 
   render() {
     return <ScrollView>
       <Title text='Fund' />
-      <Asset name={'ANT'} symbol={'ANT'} balance={199999.98437865438}/>
-      <Asset name={'ANT'} symbol={'ANT'} balance={199999.98437865438}/>
+      {this.state.assets.map(asset => <Asset key={asset.token.symbol} name={asset.token.name} symbol={asset.token.symbol} balance={199999.98437865438} />)}
     </ScrollView>
   }
 }

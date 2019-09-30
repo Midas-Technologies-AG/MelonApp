@@ -5,7 +5,7 @@ import { setNavigator } from './navigation/navigator';
 
 const App = () => {
   return (<View style={{ flex: 1, paddingTop: 46 }}>
-    <Navigation />
+    <Navigation ref={navigatorRef => setNavigator(navigatorRef)} />
   </View>
   );
 };
