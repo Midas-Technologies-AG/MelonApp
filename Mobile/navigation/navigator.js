@@ -26,7 +26,7 @@ function reset(routeName, params) {
   });
 }
 
-function goBack(params) { 
+function goBack() { 
   _navigator.dispatch(NavigationActions.back())
 }
 

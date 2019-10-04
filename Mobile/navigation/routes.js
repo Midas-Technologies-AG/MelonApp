@@ -3,6 +3,6 @@ import Mix from '../views/mix';
 import Asset from '../views/asset';
 
 export default {
-  Mix: { screen: () => <Mix /> },
-  Asset: { screen: () => <Asset /> },
+  Mix: { screen: (props) => <Mix {...props} /> },
+  Asset: { screen: (props) => <Asset {...props} /> },
 }
