@@ -13,7 +13,7 @@
     "link": "react-native link react-native-fs && react-native link react-native-tls && react-native link react-native-randombytes"
   },
   "dependencies": {
-    "@melonproject/exchange-aggregator": "^0.1.20",
+    "@melonproject/exchange-aggregator": "^2.0.0-alpha2",
     "@melonproject/protocol": "^1.0.0-patched-1",
     "@melonproject/token-math": "^0.1.6",
     "expect": "^24.8.0",
