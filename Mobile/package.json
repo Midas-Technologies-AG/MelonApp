@@ -9,9 +9,11 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "patch": "react-native link react-native-fs && react-native link react-native-tls && react-native link react-native-randombytes && sed -i.bk 's/${Contracts.//' node_modules/@melonproject/protocol/lib/Contracts.js && sed -i.bk 's/}.abi.json/.abi.json/' node_modules/@melonproject/protocol/lib/Contracts.js && sed -i.bk 's/${deploymentId}.json/kovan-kyberPrice.json/' node_modules/@melonproject/protocol/lib/utils/environment/withDeployment.js"
+    "patch": "sed -i.bk 's/${Contracts.//' node_modules/@melonproject/protocol/lib/Contracts.js && sed -i.bk 's/}.abi.json/.abi.json/' node_modules/@melonproject/protocol/lib/Contracts.js && sed -i.bk 's/${deploymentId}.json/kovan-kyberPrice.json/' node_modules/@melonproject/protocol/lib/utils/environment/withDeployment.js && rm -rf node_modules/@melonproject/exchange-aggregator/node_modules/@melonproject/",
+    "link": "react-native link react-native-fs && react-native link react-native-tls && react-native link react-native-randombytes"
   },
   "dependencies": {
+    "@melonproject/exchange-aggregator": "^0.1.20",
     "@melonproject/protocol": "^1.0.0-patched-1",
     "@melonproject/token-math": "^0.1.6",
     "expect": "^24.8.0",
