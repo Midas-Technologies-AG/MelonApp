@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import assets from '../assets'
 import { goTo } from '../navigation/navigator'
+
 export default class Asset extends Component {
   render() {
     var { symbol, name, balance } = this.props;
