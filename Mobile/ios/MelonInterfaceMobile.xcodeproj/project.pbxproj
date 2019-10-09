@@ -1460,7 +1460,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = finance.melon.interface;
 				PRODUCT_NAME = MelonInterfaceMobile;
-				PROVISIONING_PROFILE_SPECIFIER = "ASH Distribution Provisioning Midas Tech AG";
+				PROVISIONING_PROFILE_SPECIFIER = "Melon Open Interface";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1489,7 +1489,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = finance.melon.interface;
 				PRODUCT_NAME = MelonInterfaceMobile;
-				PROVISIONING_PROFILE_SPECIFIER = "ASH Distribution Provisioning Midas Tech AG";
+				PROVISIONING_PROFILE_SPECIFIER = "Melon Open Interface";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

@@ -11,10 +11,14 @@ export default class Mix extends Component {
     var assets = await getAllAssets();
     var holdings = await getHoldings()
     holdings.forEach(holding => {
-      var assetIndex = assets.findIndex(asset => asset.token.address === holding.token.address);
+      var assetIndex = assets.findIndex(asset => asset.token.address.toLowerCase() === holding.token.address.toLowerCase());
       assets[assetIndex] = Object.assign({}, assets[assetIndex], { quantity: holding.quantity / Math.pow(10, holding.token.decimals) })
     });
     this.setState((prevState, props) => Object.assign({}, prevState, { assets, isLoading: false }))
+  }
+
+  componentDidUpdate() {
+    //TODO update balances on coming back from asset screen
   }
 
   render() {
@@ -39,7 +43,7 @@ export default class Mix extends Component {
     return this.state.assets.filter(asset => !asset.quantity).map(this.renderAsset)
   }
 
-  renderAsset(asset){
+  renderAsset(asset) {
     return <Asset key={asset.token.symbol} name={asset.token.name} symbol={asset.token.symbol} balance={asset.quantity || 0} />
   }
 }

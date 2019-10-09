@@ -1,25 +1,20 @@
 var Protocol = require('@melonproject/protocol')
+var takeOasisDexOrder = require('@melonproject/protocol/lib/contracts/fund/trading/transactions/takeOasisDexOrder').takeOasisDexOrder
+var withPrivateKeySigner = require('@melonproject/protocol/lib/utils/environment/withPrivateKeySigner').withPrivateKeySigner
 var withDeployment = require('@melonproject/protocol/lib/utils/environment/withDeployment').withDeployment
 var constructEnvironment = require('@melonproject/protocol/lib/utils/environment/constructEnvironment').constructEnvironment
 var exchangeAggregate = require('@melonproject/exchange-aggregator')
+import { AsyncStorage } from 'react-native';
 
 import { INFURA_KEY } from '../env'
 
-const ENDPOINT = 'https://kovan.infura.io/'
+const ENDPOINT = 'https://kovan.infura.io/v3/13554899448942358ff6cc0b7affc8d1';
 const EXCHANGES = ['oasisdex']
 
-const ACCOUNTING_ADDRESS = '0xf66a89bb46889ab7afe285463f019a352eedf1d4';
-// 0x81f153cea0e7a3a8b5a11ff61feafb42111d0d96
-// 0x4f181e8845a344ca4d1f0add926565d841b6b0a7 hub
-// 0x5c538b790973842527fd65f7aa4257519ac3a6c8
-// 0x91bae33f90f9adae859e4cd947a491f816e98822
-// 0x385a59e848f6456adf19c367c8cf03fd39c23fab
-// 0xb8acdbe95e9980fae93716eba27709bcf1765a12
-// 0xc66b1095a45584b94c75552f6b828c86893e68e6
-// 0x9443d02c764e0daeb4c63b6c5c2f9549bd320036 trading
-// 0xe25c5bb381a97b14ad87c25302ae69b9d90e8538 vault
-// 0x160386e65c129c43ada6496ed0ec2ec63040f0bc
-
+//TODO remove these
+//kunal@m1d4s.tech Yupppp kunals
+const ACCOUNTING_ADDRESS = '0xc9d528287A37C59259F139480C9f50082B7Bf080';
+const TRADING_ADDRESS = '0x34B55262cF8367E4c799Bf3008F05fF0070b918c';
 var generateExchangeAggregatorOptions = async (baseSymbol = 'WETH', quoteSymbol = 'MLN', environment, network = exchangeAggregate.Network.KOVAN) => {
   var manager = environment || await getEnvironment()
   return ({
@@ -50,8 +45,13 @@ export var getOrders = async (baseSymbol, quoteSymbol, action) => {
   }
 }
 
-export var getEnvironment = () => withDeployment(constructEnvironment({ endpoint: ENDPOINT, track: 'kyberPrice' }))
+//TODO remove this function getPrivateKey
+export var getPrivateKey = (mnemonic) => { console.warn('0x' + (new HDWalletProvider(mnemonic, ENDPOINT)).wallet._privKey.toString('hex')); return '0x' + (new HDWalletProvider(mnemonic, ENDPOINT)).wallet._privKey.toString('hex') }
 
+export var getManagerFromPrivateKey = async (privateKey) => await withPrivateKeySigner(await getEnvironment(), privateKey)
+var getManagerFromAsyncStorage = async () => await getManagerFromPrivateKey(await AsyncStorage.getItem('privateKey'));
+export var getManagerFromMnemonic = async (mnemonic) => await getManagerFromPrivateKey(getPrivateKey(mnemonic));
+export var getEnvironment = () => withDeployment(constructEnvironment({ endpoint: ENDPOINT, track: 'kyberPrice' }))
 export var getAllAssets = async () => (await getEnvironment()).deployment.thirdPartyContracts.tokens.map(asset => ({ token: asset }))
 
 export var getHoldings = async (accountingAddress = ACCOUNTING_ADDRESS) => {
@@ -64,7 +64,7 @@ export var getHoldings = async (accountingAddress = ACCOUNTING_ADDRESS) => {
   }
 }
 
-export var makeOrder = async (tradingAddress, quoteSymbol, quantityInWeth, quantityInQuoteToken, action) => {
+export var makeOrder = async (quoteSymbol, quantityInWeth, quantityInQuoteToken, action, tradingAddress = TRADING_ADDRESS) => {
   var manager = await getManagerFromAsyncStorage();
   const base = Protocol.getTokenBySymbol(manager, 'WETH');
   const quote = Protocol.getTokenBySymbol(manager, quoteSymbol);
@@ -73,7 +73,7 @@ export var makeOrder = async (tradingAddress, quoteSymbol, quantityInWeth, quant
   return await Protocol.makeOasisDexOrder(manager, tradingAddress, { makerQuantity, takerQuantity });
 }
 
-export var takeOrder = async (tradingAddress, orderId) => {
+export var takeOrder = async (orderId, tradingAddress = TRADING_ADDRESS) => {
   var manager = await getManagerFromAsyncStorage();
   var enhancedOrder = await Protocol.getOasisDexOrder(manager, manager.deployment.exchangeConfigs.MatchingMarket.exchange, { id: orderId });
   return await takeOasisDexOrder(manager, tradingAddress, {
