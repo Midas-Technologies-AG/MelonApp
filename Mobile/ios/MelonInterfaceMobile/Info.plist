@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.0.1</string>
+	<string>0.0.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -37,20 +37,18 @@
 			</dict>
 		</dict>
 	</dict>
-  <key>NSCameraUsageDescription</key>
-  <string>Please allow access to camera</string>
-  <key>NSLocationAlwaysUsageDescription</key>
-  <string>Please allow access to location</string>
-  <key>NSLocationWhenInUseUsageDescription</key>
-  <string>Please allow access to location</string>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>Please allow access to microphone</string>
-  <key>NSPhotoLibraryAddUsageDescription</key>
-  <string>Please allow access to photos</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>Please allow access to photos</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Please allow access to camera</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Please allow access to location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Please allow access to location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Please allow access to microphone</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Please allow access to photos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please allow access to photos</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
