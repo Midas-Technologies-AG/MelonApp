@@ -25,6 +25,7 @@
     "react-native-gesture-handler": "^1.4.1",
     "react-navigation": "^4.0.10",
     "react-navigation-stack": "^1.9.1",
+    "react-native-truffle-hdwallet-provider": "git+https://github.com/bpeters/react-native-truffle-hdwallet-provider.git",
     "stream-browserify": "^2.0.2",
     "vm-browserify": "^1.1.0",
     "web3": "^1.0.0-beta.37",

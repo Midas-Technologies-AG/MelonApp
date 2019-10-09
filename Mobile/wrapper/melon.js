@@ -4,14 +4,15 @@ var withPrivateKeySigner = require('@melonproject/protocol/lib/utils/environment
 var withDeployment = require('@melonproject/protocol/lib/utils/environment/withDeployment').withDeployment
 var constructEnvironment = require('@melonproject/protocol/lib/utils/environment/constructEnvironment').constructEnvironment
 var exchangeAggregate = require('@melonproject/exchange-aggregator')
+var createQuantity = require('@melonproject/token-math').createQuantity
 import { AsyncStorage } from 'react-native';
 
 import { INFURA_KEY } from '../env'
 
-const ENDPOINT = 'https://kovan.infura.io/v3/13554899448942358ff6cc0b7affc8d1';
+const ENDPOINT = 'https://kovan.infura.io/v3/' + INFURA_KEY;
 const EXCHANGES = ['oasisdex']
 
-//TODO remove these
+//TODO remove these/get them from hub address
 //kunal@m1d4s.tech Yupppp kunals
 const ACCOUNTING_ADDRESS = '0xc9d528287A37C59259F139480C9f50082B7Bf080';
 const TRADING_ADDRESS = '0x34B55262cF8367E4c799Bf3008F05fF0070b918c';
@@ -45,9 +46,7 @@ export var getOrders = async (baseSymbol, quoteSymbol, action) => {
   }
 }
 
-//TODO remove this function getPrivateKey
 export var getPrivateKey = (mnemonic) => { console.warn('0x' + (new HDWalletProvider(mnemonic, ENDPOINT)).wallet._privKey.toString('hex')); return '0x' + (new HDWalletProvider(mnemonic, ENDPOINT)).wallet._privKey.toString('hex') }
-
 export var getManagerFromPrivateKey = async (privateKey) => await withPrivateKeySigner(await getEnvironment(), privateKey)
 var getManagerFromAsyncStorage = async () => await getManagerFromPrivateKey(await AsyncStorage.getItem('privateKey'));
 export var getManagerFromMnemonic = async (mnemonic) => await getManagerFromPrivateKey(getPrivateKey(mnemonic));
@@ -68,8 +67,8 @@ export var makeOrder = async (quoteSymbol, quantityInWeth, quantityInQuoteToken,
   var manager = await getManagerFromAsyncStorage();
   const base = Protocol.getTokenBySymbol(manager, 'WETH');
   const quote = Protocol.getTokenBySymbol(manager, quoteSymbol);
-  var makerQuantity = (action == 'add') ? createQuantity(base, quantityInWeth) : createQuantity(quote, quantityInQuoteToken);
-  var takerQuantity = (action == 'add') ? createQuantity(quote, quantityInQuoteToken) : createQuantity(base, quantityInWeth);
+  var makerQuantity = (action == 'BUY') ? createQuantity(base, quantityInWeth) : createQuantity(quote, quantityInQuoteToken);
+  var takerQuantity = (action == 'BUY') ? createQuantity(quote, quantityInQuoteToken) : createQuantity(base, quantityInWeth);
   return await Protocol.makeOasisDexOrder(manager, tradingAddress, { makerQuantity, takerQuantity });
 }
 

@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, Linking, TextInput, Modal, ActivityIndicator, Alert } from 'react-native';
 import Title from '../components/title'
 import { goBack } from '../navigation/navigator';
-import { getOrders, takeOrder } from '../wrapper/melon';
+import { getOrders, takeOrder, makeOrder } from '../wrapper/melon';
 import assets from '../assets'
+import isTradeableNumber from '../helpers/isTradeableNumber';
 
 export default class Asset extends Component {
 
-  state = { orders: { add: [], remove: [] }, isLoading: true, isOrdering: false, value: '' }
+  state = { orders: { add: [], remove: [] }, isLoading: true, isOrdering: false, value: '', valueInWeth: '' }
 
   async componentDidMount() {
     var { symbol } = this.props.navigation.state.params;
@@ -27,8 +28,7 @@ export default class Asset extends Component {
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator />
-          <Text>Attempting</Text>
-          <Text style={{ fontWeight: 'bold' }}>Taking Order...</Text>
+          <Text style={{ fontWeight: 'bold', marginTop: 16 }}>Attempting Order...</Text>
         </View>
       </Modal>
       <Text
@@ -49,14 +49,27 @@ export default class Asset extends Component {
       </TouchableOpacity>
       <TextInput
         underlineColorAndroid='transparent'
-        placeholder={'0.00'}
+        placeholder={symbol}
         style={{ paddingLeft: 16, fontSize: 32, fontWeight: '200' }}
         keyboardType={'numeric'}
         onChangeText={value => this.setState((prevState, props) => Object.assign({}, prevState, { value }))}
         value={this.state.value}
       />
-      {/* TODO only take numbers input */}
+      <View style={{ backgroundColor: 'rgb(230,230,230)', width: '100%', height: 1, marginBottom: 12 }} />
+      <TextInput
+        underlineColorAndroid='transparent'
+        placeholder={'WETH'}
+        style={{ paddingLeft: 16, fontSize: 32, fontWeight: '200' }}
+        keyboardType={'numeric'}
+        onChangeText={value => this.setState((prevState, props) => Object.assign({}, prevState, { valueInWeth: value }))}
+        value={this.state.valueInWeth}
+      />
       <View style={{ backgroundColor: 'rgb(230,230,230)', width: '100%', height: 1 }} />
+      {/* TODO only take numbers input */}
+      <View style={{ margin: 16, flexDirection: 'row' }}>
+        {this.renderButton('SELL')}
+        {this.renderButton('BUY')}
+      </View>
       <Text style={{ fontSize: 16, fontWeight: 'bold', margin: 16 }}>Orderbook</Text>
       {this.state.isLoading ? <Text style={{ margin: 16 }}>Loading...</Text> : null}
       {this.state.orders.add.map(order => this.renderOrders('add', order))}
@@ -64,6 +77,13 @@ export default class Asset extends Component {
     </ScrollView>
   }
 
+  renderButton(text) {
+    return <TouchableOpacity
+      onPress={() => this.handleMakeOrder(text)}
+      style={{ height: 40, width: '50%', backgroundColor: text == 'SELL' ? 'black' : 'white', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', borderColor: 'black', borderWidth: 1 }}>
+      <Text style={{ fontWeight: 'bold', color: text == 'SELL' ? 'white' : 'black', fontSize: 20 }}>{text}</Text>
+    </TouchableOpacity>
+  }
   renderOrders(action, order) {
     return <TouchableOpacity onPress={() => this.handleTakeOrder(order)} key={order.id} style={{ height: 30, flexDirection: 'row', alignItems: 'center', marginVertical: 8 }}>
       <View style={{ height: 30, width: 30, borderRadius: 15, backgroundColor: (action == 'add') ? 'lightgreen' : '#ff2b2b', marginHorizontal: 16 }}>
@@ -88,11 +108,14 @@ export default class Asset extends Component {
     }
   }
 
-  async handleMakeOrder(order) {
+  async handleMakeOrder(action) {
+    var value = this.state.value;
+    var valueInWeth = this.state.valueInWeth;
+    if (!isTradeableNumber(value) || !isTradeableNumber(valueInWeth)) alert('Invalid input')
     this.setState((prevState, props) => Object.assign({}, prevState, { isOrdering: true }))
     try {
-      await takeOrder(order.original.id);
-      Alert.alert("Success", "Successfully proccessed order " + order.original.id, [
+      await makeOrder(this.props.navigation.state.params.symbol, valueInWeth, value, action)
+      Alert.alert("Success", "Successfully proccessed order", [
         { text: 'OK', onPress: () => goBack() },
       ]);
     }
