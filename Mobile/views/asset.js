@@ -74,6 +74,7 @@ export default class Asset extends Component {
       {this.state.isLoading ? <Text style={{ margin: 16 }}>Loading...</Text> : null}
       {this.state.orders.add.map(order => this.renderOrders('add', order))}
       {this.state.orders.remove.map(order => this.renderOrders('remove', order))}
+      <View style={{ marginBottom: 40 }} />
     </ScrollView>
   }
 

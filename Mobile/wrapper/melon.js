@@ -63,6 +63,11 @@ export var getHoldings = async (accountingAddress = ACCOUNTING_ADDRESS) => {
   }
 }
 
+export var getInfo = async (accountingAddress = ACCOUNTING_ADDRESS) => {
+  var environment = await getEnvironment();
+  return await Protocol.performCalculations(environment, accountingAddress)
+}
+
 export var makeOrder = async (quoteSymbol, quantityInWeth, quantityInQuoteToken, action, tradingAddress = TRADING_ADDRESS) => {
   var manager = await getManagerFromAsyncStorage();
   const base = Protocol.getTokenBySymbol(manager, 'WETH');
