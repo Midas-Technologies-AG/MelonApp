@@ -5,6 +5,7 @@ var withDeployment = require('@melonproject/protocol/lib/utils/environment/withD
 var constructEnvironment = require('@melonproject/protocol/lib/utils/environment/constructEnvironment').constructEnvironment
 var exchangeAggregate = require('@melonproject/exchange-aggregator')
 var createQuantity = require('@melonproject/token-math').createQuantity
+var HDWalletProvider = require("react-native-truffle-hdwallet-provider");
 import { AsyncStorage } from 'react-native';
 
 import { INFURA_KEY } from '../env'
@@ -12,10 +13,6 @@ import { INFURA_KEY } from '../env'
 const ENDPOINT = 'https://kovan.infura.io/v3/' + INFURA_KEY;
 const EXCHANGES = ['oasisdex']
 
-//TODO remove these/get them from hub address
-//kunal@m1d4s.tech Yupppp kunals
-const ACCOUNTING_ADDRESS = '0xc9d528287A37C59259F139480C9f50082B7Bf080';
-const TRADING_ADDRESS = '0x34B55262cF8367E4c799Bf3008F05fF0070b918c';
 var generateExchangeAggregatorOptions = async (baseSymbol = 'WETH', quoteSymbol = 'MLN', environment, network = exchangeAggregate.Network.KOVAN) => {
   var manager = environment || await getEnvironment()
   return ({
@@ -46,15 +43,18 @@ export var getOrders = async (baseSymbol, quoteSymbol, action) => {
   }
 }
 
-export var getPrivateKey = (mnemonic) => { console.warn('0x' + (new HDWalletProvider(mnemonic, ENDPOINT)).wallet._privKey.toString('hex')); return '0x' + (new HDWalletProvider(mnemonic, ENDPOINT)).wallet._privKey.toString('hex') }
+var getFundData = async (spoke) => JSON.parse(await AsyncStorage.getItem('fund'))[spoke];
+export var getPrivateKey = (mnemonic) => '0x' + (new HDWalletProvider(mnemonic, ENDPOINT)).wallet._privKey.toString('hex')
 export var getManagerFromPrivateKey = async (privateKey) => await withPrivateKeySigner(await getEnvironment(), privateKey)
 var getManagerFromAsyncStorage = async () => await getManagerFromPrivateKey(await AsyncStorage.getItem('privateKey'));
 export var getManagerFromMnemonic = async (mnemonic) => await getManagerFromPrivateKey(getPrivateKey(mnemonic));
 export var getEnvironment = () => withDeployment(constructEnvironment({ endpoint: ENDPOINT, track: 'kyberPrice' }))
 export var getAllAssets = async () => (await getEnvironment()).deployment.thirdPartyContracts.tokens.map(asset => ({ token: asset }))
 
-export var getHoldings = async (accountingAddress = ACCOUNTING_ADDRESS) => {
+export var getHoldings = async () => {
   try {
+    var accountingAddress = await getFundData('accounting')
+    console.warn(accountingAddress);
     var manager = await getEnvironment()
     var holdings = await Protocol.getFundHoldings(manager, accountingAddress);
     return holdings;
@@ -63,12 +63,16 @@ export var getHoldings = async (accountingAddress = ACCOUNTING_ADDRESS) => {
   }
 }
 
-export var getInfo = async (accountingAddress = ACCOUNTING_ADDRESS) => {
+export var getInfo = async () => {
+  var accountingAddress = await getFundData('accounting')
+  console.warn(accountingAddress);
   var environment = await getEnvironment();
   return await Protocol.performCalculations(environment, accountingAddress)
 }
 
-export var makeOrder = async (quoteSymbol, quantityInWeth, quantityInQuoteToken, action, tradingAddress = TRADING_ADDRESS) => {
+export var makeOrder = async (quoteSymbol, quantityInWeth, quantityInQuoteToken, action) => {
+  var tradingAddress = await getFundData('trading')
+  console.warn(tradingAddress);
   var manager = await getManagerFromAsyncStorage();
   const base = Protocol.getTokenBySymbol(manager, 'WETH');
   const quote = Protocol.getTokenBySymbol(manager, quoteSymbol);
@@ -77,7 +81,9 @@ export var makeOrder = async (quoteSymbol, quantityInWeth, quantityInQuoteToken,
   return await Protocol.makeOasisDexOrder(manager, tradingAddress, { makerQuantity, takerQuantity });
 }
 
-export var takeOrder = async (orderId, tradingAddress = TRADING_ADDRESS) => {
+export var takeOrder = async (orderId) => {
+  var tradingAddress = await getFundData('trading')
+  console.warn(tradingAddress);
   var manager = await getManagerFromAsyncStorage();
   var enhancedOrder = await Protocol.getOasisDexOrder(manager, manager.deployment.exchangeConfigs.MatchingMarket.exchange, { id: orderId });
   return await takeOasisDexOrder(manager, tradingAddress, {
@@ -86,6 +92,16 @@ export var takeOrder = async (orderId, tradingAddress = TRADING_ADDRESS) => {
     takerQuantity: enhancedOrder.buy,
     maker: enhancedOrder.owner,
   })
+}
+
+export var getHubs = async () => {
+  var manager = await getManagerFromAsyncStorage();
+  return await Protocol.managersToHubs(manager, manager.deployment.melonContracts.version, manager.wallet.address)
+}
+
+export var getRoutes = async () => {
+  var manager = await getManagerFromAsyncStorage();
+  return await Protocol.managersToRoutes(manager, manager.deployment.melonContracts.version, manager.wallet.address)
 }
 
 var removeDuplicateOrders = (orders) => orders.reduce((collectedOrders, order) => {

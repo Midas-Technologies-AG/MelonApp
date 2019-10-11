@@ -28,8 +28,8 @@ export default class Mix extends Component {
       <Title text='Fund' />
       {!this.state.nav ? null : <View style={{ position: 'absolute', right: 16, alignItems: 'flex-end' }}>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={{ fontWeight: 'bold' }}>SHARE PRICE: </Text>
-          <Text>{this.state.sharePrice.toFixed(4)}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 12 }}>SHARE PRICE: </Text>
+          <Text style={{ fontSize: 12 }}>{this.state.sharePrice.toFixed(4)}</Text>
         </View>
       </View>}
       {(this.state.isLoading) ? <Text style={{ margin: 16 }}>Loading...</Text> : this.renderAssets()}

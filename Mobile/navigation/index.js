@@ -5,7 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 const Navigation = createStackNavigator(
 	routes,
 	{
-		initialRouteName: 'Mix',
+		initialRouteName: 'Login',
 		headerMode:'none',
 	}
 );
