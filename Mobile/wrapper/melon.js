@@ -54,7 +54,6 @@ export var getAllAssets = async () => (await getEnvironment()).deployment.thirdP
 export var getHoldings = async () => {
   try {
     var accountingAddress = await getFundData('accounting')
-    console.warn(accountingAddress);
     var manager = await getEnvironment()
     var holdings = await Protocol.getFundHoldings(manager, accountingAddress);
     return holdings;
@@ -65,14 +64,12 @@ export var getHoldings = async () => {
 
 export var getInfo = async () => {
   var accountingAddress = await getFundData('accounting')
-  console.warn(accountingAddress);
   var environment = await getEnvironment();
   return await Protocol.performCalculations(environment, accountingAddress)
 }
 
 export var makeOrder = async (quoteSymbol, quantityInWeth, quantityInQuoteToken, action) => {
   var tradingAddress = await getFundData('trading')
-  console.warn(tradingAddress);
   var manager = await getManagerFromAsyncStorage();
   const base = Protocol.getTokenBySymbol(manager, 'WETH');
   const quote = Protocol.getTokenBySymbol(manager, quoteSymbol);
@@ -83,7 +80,6 @@ export var makeOrder = async (quoteSymbol, quantityInWeth, quantityInQuoteToken,
 
 export var takeOrder = async (orderId) => {
   var tradingAddress = await getFundData('trading')
-  console.warn(tradingAddress);
   var manager = await getManagerFromAsyncStorage();
   var enhancedOrder = await Protocol.getOasisDexOrder(manager, manager.deployment.exchangeConfigs.MatchingMarket.exchange, { id: orderId });
   return await takeOasisDexOrder(manager, tradingAddress, {
