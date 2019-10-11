@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, Linking, TextInput, Modal, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, TextInput, Modal, ActivityIndicator, Alert } from 'react-native';
 import Title from '../components/title'
 import { goBack } from '../navigation/navigator';
 import { getOrders, takeOrder, makeOrder } from '../wrapper/melon';
 import assets from '../assets'
 import isTradeableNumber from '../helpers/isTradeableNumber';
+import CMCButton from '../components/cmc';
 
 export default class Asset extends Component {
 
@@ -44,9 +45,7 @@ export default class Asset extends Component {
           <Text style={{ fontSize: 16, fontWeight: '100', color: 'black' }}>{balance}</Text>
         </View>
       </View>
-      <TouchableOpacity style={{ marginLeft: 16, marginBottom: 24 }} onPress={() => Linking.openURL('https://coinmarketcap.com/currencies/' + encodeURI(name))}>
-        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>📈 VIEW ON COINMARKETCAP.COM</Text>
-      </TouchableOpacity>
+      <CMCButton symbol={symbol}/>
       <TextInput
         underlineColorAndroid='transparent'
         placeholder={symbol}
