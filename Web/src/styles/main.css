@@ -1,0 +1,144 @@
+/*FUND VIEW*/
+
+.fund-view {
+  background: rgb(250, 250, 250);
+  height: auto;
+  max-height: calc(100vh - 80px);
+  overflow-y: scroll;
+  border-bottom: 1px solid lightgrey;
+  color: grey;
+  cursor: pointer;
+}
+
+.asset:hover {
+  background-color: rgb(240, 240, 240);
+}
+
+.asset {
+  height: 90px;
+  width: 200px;
+  border: 1px solid lightgrey;
+  border-bottom: none;
+  padding: 16px;
+}
+
+.asset.selected {
+  color: black;
+  background-color: rgb(240, 240, 240);
+}
+
+.asset>.title {
+  color: black;
+  font-weight: bold;
+  font-size: 21px;
+}
+
+.asset>.subtitle {
+  color: rgb(100, 100, 100);
+  font-weight: 100;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.asset>.balance {
+  color: black;
+  font-weight: 500;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.asset>img {
+  vertical-align: middle;
+  margin-right: 16px;
+}
+
+/*ASSET VIEW*/
+
+.asset-view {
+  background: #f0f0f0;
+  width: 100%;
+  overflow-y: scroll;
+  height: calc(100vh - 80px);
+}
+
+.asset-view>h1, .asset-view>h3 {
+  text-align: right;
+  margin-right: 24px;
+}
+
+.asset-view>h2 {
+  margin-left: 48px;
+}
+
+.input-value {
+  height: 45px;
+  width: calc(50% - 40px);
+  font-size: 21px;
+  padding-left: 10px;
+  background: none;
+  border: none;
+  border-bottom: 1px dashed darkgray;
+}
+
+.input-container {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  padding: 48px;
+}
+
+.input-value:focus {
+  outline: none;
+}
+
+.asset-view button {
+  background: white;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  border: 1px solid black;
+  padding: 16px;
+  width: calc(20% - 40px);
+  font-size: 18px;
+  font-weight: bolder;
+  cursor: pointer;
+  min-width: 100px;
+}
+
+.asset-view img {
+  position: relative;
+  height: 14px;
+  width: 14px;
+  padding: 6px;
+  top: 2px;
+  border-radius: 50px;
+}
+
+.orders {
+  margin-left: 48px;
+  font-size: 12px;
+}
+
+.order {
+  border-radius: 50px;
+  width: 256px;
+  cursor: pointer;
+  margin-top:16px;
+  color:white
+}
+.order.add{
+  background-color: lightgreen;
+  color:black
+}
+.order.remove{
+  background-color: #ff3939;
+}
+.order>span {
+  position: relative;
+  bottom: 6px;
+  left: 10px;
+}
+
+.order:hover {
+  opacity: 0.6;
+}
