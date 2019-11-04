@@ -10,7 +10,8 @@ code {
 
 main {
   display: flex;
-  padding: 16px
+  margin: 16px;
+  box-shadow: 0px 10px 50px #b5b5b5;
 }
 
 header {
