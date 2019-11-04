@@ -121,6 +121,12 @@ export var getInfo = async () => {
   return sharePrice;
 }
 
+export var getName = async () => {
+  var hubAddress = await getFundData('hubAddress')
+  var environment = await getEnvironment();
+  return await Protocol.getName(environment, hubAddress)
+}
+
 export var makeOrder = async (quoteSymbol, quantityInWeth, quantityInQuoteToken, action) => {
   var tradingAddress = await getFundData('trading')
   var manager = await getManager();
@@ -142,15 +148,18 @@ export var takeOrder = async (orderId) => {
     maker: enhancedOrder.owner,
   })
 }
-makeOrder('MLN', 0.01, 1, 'SELL')
-  .then(console.warn)
-  .catch(console.warn)
+// makeOrder('MLN', 0.01, 1, 'SELL')
+//   .then(console.warn)
+//   .catch(console.warn)
 // takeOrder('37440')
 //   .then(console.warn)
 // .catch(console.warn)
 
 export var getHubs = async () => {
   var manager = await getManager();
+  console.warn(manager.wallet);
+  console.warn(manager);
+  
   return await Protocol.managersToHubs(manager, manager.deployment.melonContracts.version, manager.wallet.address)
 }
 
@@ -177,3 +186,4 @@ var removeDuplicateOrders = (orders) => orders.reduce((collectedOrders, order) =
 
 // setup fund using ropsten
 // test new functions
+
