@@ -2,7 +2,7 @@ import React from 'react';
 import './styles/main.css'
 import './styles/header.css'
 import PropTypes from 'prop-types';
-import { getAllAssets, getEnvironment, getHubs, getRoutes, getHoldings, getInfo } from './wrapper/melon'
+import { getAllAssets, getEnvironment, getHubs, getRoutes, getHoldings, getInfo, getOrders } from './wrapper/melon'
 import Web3 from 'web3';
 
 var getImageUrl = (symbol) => {
@@ -15,7 +15,7 @@ class App extends React.Component {
 
   constructor(props, context) {
     super(props)
-    this.state = { assets: new Array(), selectedIndex: 0, sharePrice: 0 }
+    this.state = { assets: new Array(), selectedIndex: null, sharePrice: 0, addOrders: [], removeOrders: [] }
     // const web3Context = context.web3;
     // console.warn(web3Context);
   }
@@ -43,6 +43,7 @@ class App extends React.Component {
     console.warn(assets);
     var sharePrice = (await getInfo()).toFixed(4);
     this.setState((prevState, props) => Object.assign({}, prevState, { assets, sharePrice }))
+
   }
 
   render() {
@@ -56,7 +57,7 @@ class App extends React.Component {
     return (
       <div>
         <header>
-          <span className="fund-name">KUNIMIX</span>
+          <span className="fund-name">MIX</span>
           <span className="share-price"><b>SHARE PRICE</b> {this.state.sharePrice || '...'}</span>
         </header>
         <main>
@@ -79,8 +80,8 @@ class App extends React.Component {
             {this.renderBuySellButton()}
             <h2>ORDERBOOK</h2>
             <div className="orders">
-              {this.renderOrder('add')}
-              {this.renderOrder('remove')}
+              {this.state.addOrders.map(order => this.renderOrder('add', order))}
+              {this.state.removeOrders.map(order => this.renderOrder('remove', order))}
             </div>
           </div>}
         </main>
@@ -88,8 +89,12 @@ class App extends React.Component {
     );
   }
 
-  selectAsset(selectedIndex) {
-    this.setState((prevState, props) => Object.assign({}, prevState, { selectedIndex }))
+  async selectAsset(selectedIndex) {
+    this.setState((prevState, props) => Object.assign({}, prevState, { selectedIndex, addOrders: [], removeOrders: [] }))
+    var symbol = this.state.assets[selectedIndex].token.symbol;
+    var addOrders = await getOrders('WETH', symbol, 'add')
+    var removeOrders = await getOrders(symbol, 'WETH', 'remove')
+    this.setState((prevState, props) => Object.assign({}, prevState, { addOrders, removeOrders }))
   }
 
   renderInput(asset) {
@@ -104,10 +109,10 @@ class App extends React.Component {
   renderButton(text) {
     return <button style={{ backgroundColor: text == 'SELL' ? 'white' : 'black', color: text == 'SELL' ? 'black' : 'white' }}>{text}</button>
   }
-  renderOrder(type) {
+  renderOrder(type, order) {
     return <div className={"order " + type}>
       <img src={'https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/white/svg/' + (type == 'add' ? 'plus' : 'minus') + '.svg?sanitize=true'} style={{ backgroundColor: type == 'add' ? 'green' : '#e00000' }} />
-      <span>12.4323 MLN for 90.87432 Ξ total</span>
+      {(type == 'add') ? <span>{(order.trade.quote.quantity / Math.pow(10, order.trade.quote.token.decimals)).toFixed(4) + ' ' + order.trade.quote.token.symbol} for {(order.trade.base.quantity / Math.pow(10, 18)).toFixed(4)} Ξ total</span> : <span>{(order.trade.base.quantity / Math.pow(10, order.trade.base.token.decimals)).toFixed(4) + ' ' + order.trade.base.token.symbol} for {(order.trade.quote.quantity / Math.pow(10, order.trade.quote.token.decimals)).toFixed(4)} Ξ total</span>}
     </div>
   }
 }
