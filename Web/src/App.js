@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/main.css'
 import './styles/header.css'
-import { getAllAssets, getName, getHubs, getRoutes, getHoldings, getInfo, getOrders, takeOrder } from './wrapper/melon'
+import { getAllAssets, getName, getHubs, getRoutes, getHoldings, getInfo, getOrders, takeOrder, makeOrder } from './wrapper/melon'
 
 var getImageUrl = (symbol) => {
   if (symbol == 'DGX') symbol = 'DGD';
@@ -24,7 +24,7 @@ class App extends React.Component {
       // console.warn(routes);
       // localStorage.setItem('fund', JSON.stringify(Object.assign({}, routes, { hubAddress })))
       var holdings = []// await getHoldings();
-      var name = await getName();
+      var name = 'await getName();'
       holdings = holdings.reduce((assets, asset) => {
         asset.quantity = (asset.quantity / Math.pow(10, asset.token.decimals)).toFixed(2)
         assets[asset.token.address] = asset;
@@ -36,7 +36,7 @@ class App extends React.Component {
         if (holdings[asset.token.address]) return Object.assign({}, holdings[asset.token.address], asset);
         else return asset
       })
-      var sharePrice = (await getInfo()).toFixed(4);
+      var sharePrice = 0.01// (await getInfo()).toFixed(4);
       this.setState((prevState, props) => Object.assign({}, prevState, { assets, sharePrice, name, isLoading: false }))
     } catch (e) {
       alert('Please ensure you have Metamask logged in with Kovan testnet');
@@ -95,7 +95,7 @@ class App extends React.Component {
   }
 
   renderInput(asset) {
-    return <input type="number" placeholder={asset} className="input-value" />
+    return <input id={"value-" + asset} type="number" placeholder={asset} className="input-value" />
   }
   renderBuySellButton() {
     return <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -104,19 +104,35 @@ class App extends React.Component {
     </div>
   }
   renderButton(text) {
-    return <button style={{ backgroundColor: text == 'SELL' ? 'white' : 'black', color: text == 'SELL' ? 'black' : 'white' }}>{text}</button>
+    return <button onClick={() => this.handleMakeOrder(text)} style={{ backgroundColor: text == 'SELL' ? 'white' : 'black', color: text == 'SELL' ? 'black' : 'white' }}>{text}</button>
   }
   renderOrder(type, order) {
-    return <div className={"order " + type} onClick={() => this.handleOrder(type, order)}>
+    return <div className={"order " + type} onClick={() => this.handleTakeOrder(order)}>
       <img src={'https://raw.githubusercontent.com/encharm/Font-Awesome-SVG-PNG/master/white/svg/' + (type == 'add' ? 'plus' : 'minus') + '.svg?sanitize=true'} style={{ backgroundColor: type == 'add' ? 'green' : '#e00000' }} />
       {(type == 'add') ? <span>{(order.trade.quote.quantity / Math.pow(10, order.trade.quote.token.decimals)).toFixed(4) + ' ' + order.trade.quote.token.symbol} for {(order.trade.base.quantity / Math.pow(10, 18)).toFixed(4)} Ξ total</span> : <span>{(order.trade.base.quantity / Math.pow(10, order.trade.base.token.decimals)).toFixed(4) + ' ' + order.trade.base.token.symbol} for {(order.trade.quote.quantity / Math.pow(10, order.trade.quote.token.decimals)).toFixed(4)} Ξ total</span>}
     </div>
   }
-  async handleOrder(type, order) {
+  async handleTakeOrder(order) {
     this.setState((prevState, props) => Object.assign({}, prevState, { isLoading: true }))
     try {
       await takeOrder(order.original.id)
-      alert('Order ' + order.original.id + ' taken successfully')
+      alert('Order taken successfully')
+      //TODO reload holdings
+    }
+    catch (e) {
+      alert(e.message)
+    }
+    this.setState((prevState, props) => Object.assign({}, prevState, { isLoading: false }))
+  }
+  async handleMakeOrder(action) {
+    var selectedAsset = this.state.assets[this.state.selectedIndex].token.symbol
+    var wethValue = Number(document.getElementById('value-WETH').value)
+    var assetValue = Number(document.getElementById('value-' + selectedAsset).value)
+    if (!wethValue || !assetValue) return;
+    this.setState((prevState, props) => Object.assign({}, prevState, { isLoading: true }))
+    try {
+      await makeOrder(selectedAsset, wethValue, assetValue, action)
+      alert('Order made successfully')
       //TODO reload holdings
     }
     catch (e) {
