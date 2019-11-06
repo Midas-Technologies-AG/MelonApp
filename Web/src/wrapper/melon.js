@@ -2,7 +2,6 @@ import { INFURA_KEY } from '../env'
 var Protocol = require('@melonproject/protocol')
 
 var takeOasisDexOrder = require('@melonproject/protocol/lib/contracts/fund/trading/transactions/takeOasisDexOrder').takeOasisDexOrder
-// var withPrivateKeySigner = require('@melonproject/protocol/lib/utils/environment/withPrivateKeySigner').withPrivateKeySigner
 var withDeployment = require('@melonproject/protocol/lib/utils/environment/withDeployment').withDeployment
 var constructEnvironment = require('@melonproject/protocol/lib/utils/environment/constructEnvironment').constructEnvironment
 var exchangeAggregate = require('@melonproject/exchange-aggregator')
@@ -16,7 +15,7 @@ var AsyncStorage = window.localStorage
 
 const ENDPOINT = 'https://kovan.infura.io/v3/' + INFURA_KEY;
 const EXCHANGES = ['oasisdex']
-
+window.ethereum.enable()
 // var Web3 = require('web3')
 // var web3 = new Web3('https://ropsten.infura.io/v3/' + INFURA_KEY)
 // const ABI = [{ "constant": true, "inputs": [], "name": "orderId", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "targetExchange", "type": "address" }, { "name": "orderAddresses", "type": "address[6]" }, { "name": "orderValues", "type": "uint256[8]" }, { "name": "identifier", "type": "bytes32" }, { "name": "makerAssetData", "type": "bytes" }, { "name": "takerAssetData", "type": "bytes" }, { "name": "signature", "type": "bytes" }], "name": "cancelOrder", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "targetExchange", "type": "address" }, { "name": "orderAddresses", "type": "address[6]" }, { "name": "orderValues", "type": "uint256[8]" }, { "name": "identifier", "type": "bytes32" }, { "name": "makerAssetData", "type": "bytes" }, { "name": "takerAssetData", "type": "bytes" }, { "name": "signature", "type": "bytes" }], "name": "makeOrder", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "donateEther", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }, { "constant": true, "inputs": [], "name": "targetExchange", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "onExchange", "type": "address" }, { "name": "id", "type": "uint256" }, { "name": "makerAsset", "type": "address" }], "name": "getOrder", "outputs": [{ "name": "", "type": "address" }, { "name": "", "type": "address" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "targetExchange", "type": "address" }, { "name": "orderAddresses", "type": "address[6]" }, { "name": "orderValues", "type": "uint256[8]" }, { "name": "identifier", "type": "bytes32" }, { "name": "makerAssetData", "type": "bytes" }, { "name": "takerAssetData", "type": "bytes" }, { "name": "signature", "type": "bytes" }], "name": "takeOrder", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "payable": true, "stateMutability": "payable", "type": "fallback" }]
@@ -40,18 +39,13 @@ const EXCHANGES = ['oasisdex']
 
 //TODO move to seperate file
 const withPrivateKeySigner = (environment) => {
-  var Web3Accounts = require("web3-eth-accounts")
-  var web3Accounts = new Web3Accounts(window.web3.currentProvider)
   const address = window.web3.currentProvider.selectedAddress
-
-
-  const signTransaction = unsignedTransaction => web3Accounts
-    .signTransaction(unsignedTransaction, (f, d) => console.warn(f))
-  // .then(t => t.rawTransaction);
+  const signTransaction = unsignedTransaction => unsignedTransaction;
   const signMessage = message => window.web3.eth.sign(address, message, function (err, result) {
     if (err) return console.error(err)
     console.log('SIGNED:' + result)
   })
+  environment.eth.signTransaction = window.web3.eth.signTransaction;
   const withWallet = Object.assign({}, environment, {
     wallet: {
       address,
@@ -148,18 +142,12 @@ export var takeOrder = async (orderId) => {
     maker: enhancedOrder.owner,
   })
 }
-// makeOrder('MLN', 0.01, 1, 'SELL')
-//   .then(console.warn)
-//   .catch(console.warn)
-// takeOrder('37440')
-//   .then(console.warn)
-// .catch(console.warn)
 
 export var getHubs = async () => {
   var manager = await getManager();
   console.warn(manager.wallet);
   console.warn(manager);
-  
+
   return await Protocol.managersToHubs(manager, manager.deployment.melonContracts.version, manager.wallet.address)
 }
 
@@ -173,17 +161,3 @@ var removeDuplicateOrders = (orders) => orders.reduce((collectedOrders, order) =
   if (quantities.indexOf(String(order.trade.base.quantity)) < 0) collectedOrders.push(order)
   return collectedOrders;
 }, new Array());
-
-// setTimeout(async () => {
-//   var x = await window.web3.eth.sign('0x88D855BdF87b93B956154714109d9a5A22A6AD9B', '0x88D855BdF87b93B956154714109d9a5A22A6AD9B', function (err, result) {
-//     alert('fds')
-//     if (err) return console.warn(err)
-//     console.warn('SIGNED:' + result)
-//   })
-//   console.warn(x);
-
-// }, 1000)
-
-// setup fund using ropsten
-// test new functions
-
