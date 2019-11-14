@@ -6,6 +6,7 @@
     "@melonproject/exchange-aggregator": "^2.0.0-alpha2",
     "@melonproject/protocol": "1.0.0-patched-1",
     "@melonproject/token-math": "^0.1.6",
+    "expect": "24.9.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0",

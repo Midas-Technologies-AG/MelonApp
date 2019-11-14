@@ -1,3 +1,5 @@
+import Web3 from 'web3'
+
 export default (environment) => {
   const address = window.web3.currentProvider.selectedAddress
   const signTransaction = unsignedTransaction => unsignedTransaction;
@@ -6,7 +8,11 @@ export default (environment) => {
     console.log('SIGNED:' + result)
   })
   environment.eth.signTransaction = window.web3.eth.signTransaction;
-  environment.eth.sendTransaction = window.web3.eth.sendTransaction;
+  environment.eth.sendTransaction = (signedOrNotTx) => {
+    var web3 = new Web3(window.web3.currentProvider)
+    return web3.eth.sendTransaction(signedOrNotTx)
+  }
+
   const withWallet = Object.assign({}, environment, {
     wallet: {
       address,

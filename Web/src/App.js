@@ -5,12 +5,13 @@ import { getAllAssets, getName, getHubs, getRoutes, getHoldings, getInfo, getOrd
 import Header from './components/header';
 import Fund from './components/fundView';
 import AssetView from './components/assetView';
+import SetupFund from './components/setupFund';
 
 class App extends React.Component {
 
   constructor(props, context) {
     super(props)
-    this.state = { assets: new Array(), selectedIndex: null, isLoading: true, hasValidFund: false }
+    this.state = { assets: new Array(), selectedIndex: null, isLoading: true, hasValidFund: false, error: true }
   }
 
   async componentDidMount() {
@@ -21,12 +22,13 @@ class App extends React.Component {
     try {
       var hubAddress = await getHubs()
       if (!hubAddress) {
-        alert('Please ensure you have a fund setup with Kovan testnet');
+        localStorage.clear();
+        this.setState((prevState, props) => Object.assign({}, prevState, { isLoading: false, hasValidFund: false, error: false }))
         return;
       }
       var routes = await getRoutes()
       localStorage.setItem('fund', JSON.stringify(Object.assign({}, routes, { hubAddress })))
-      this.setState((prevState, props) => Object.assign({}, prevState, { isLoading: false, hasValidFund: true }))
+      this.setState((prevState, props) => Object.assign({}, prevState, { isLoading: false, hasValidFund: true, error: false }))
     } catch (e) {
       alert('Please ensure you have Metamask logged in with Kovan testnet with a fund setup');
     }
@@ -34,22 +36,23 @@ class App extends React.Component {
 
   render() {
     var selectedAsset = this.state.selectedAsset
-    console.warn(this.state.hasValidFund);
-
-    if (!this.state.hasValidFund) return <div></div>
+    if (this.state.error) return <div></div>
     return (
       <div>
-        <Header />
+        {this.state.hasValidFund ? <Header /> : null}
         <main style={{ display: this.state.isLoading ? 'flex' : 'none' }}>
           <div className="loading">
             <img src="https://icon-library.net/images/loading-icon-animated-gif/loading-icon-animated-gif-1.jpg" height="33" />
             <h1>Loading</h1>
           </div>
         </main>
-        <main style={{ display: !this.state.isLoading ? 'flex' : 'none' }}>
+
+        {this.state.hasValidFund ? <main style={{ display: !this.state.isLoading ? 'flex' : 'none' }}>
           <Fund selectAsset={this.selectAsset.bind(this)} />
           {(!selectedAsset) ? null : <AssetView selectedAsset={this.state.selectedAsset} toggleLoading={this.toggleLoading.bind(this)} />}
-        </main>
+        </main> : <main style={{ display: !this.state.isLoading ? 'flex' : 'none' }}>
+            <SetupFund toggleLoading={this.toggleLoading.bind(this)} />
+          </main>}
       </div>
     );
   }

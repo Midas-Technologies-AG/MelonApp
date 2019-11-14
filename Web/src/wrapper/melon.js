@@ -1,14 +1,16 @@
 import { INFURA_KEY } from '../env'
 import withPrivateKeySigner from './withPrivateKeySigner'
+import Web3 from 'web3'
 var Protocol = require('@melonproject/protocol')
 var takeOasisDexOrder = require('@melonproject/protocol/lib/contracts/fund/trading/transactions/takeOasisDexOrder').takeOasisDexOrder
 var withDeployment = require('@melonproject/protocol/lib/utils/environment/withDeployment').withDeployment
 var constructEnvironment = require('@melonproject/protocol/lib/utils/environment/constructEnvironment').constructEnvironment
 var exchangeAggregate = require('@melonproject/exchange-aggregator')
 var createQuantity = require('@melonproject/token-math').createQuantity
-
+var setupFund = require('@melonproject/protocol/lib/contracts/fund/hub/transactions/setupFund').setupFund
 const ENDPOINT = 'https://kovan.infura.io/v3/' + INFURA_KEY;
 const EXCHANGES = ['oasisdex']
+const approve = require("@melonproject/protocol/lib/contracts/dependencies/token/transactions/approve").approve
 
 var getFundData = spoke => JSON.parse(window.localStorage.getItem('fund'))[spoke];
 var getEnvironment = () => withDeployment(constructEnvironment({ endpoint: ENDPOINT, track: 'kyberPrice' }))
@@ -108,3 +110,41 @@ var removeDuplicateOrders = (orders) => orders.reduce((collectedOrders, order) =
   if (quantities.indexOf(String(order.trade.base.quantity)) < 0) collectedOrders.push(order)
   return collectedOrders;
 }, new Array());
+
+var getBalance = async (address) => {
+  var manager = await getManager();
+  return new Promise((resolve, reject) => {
+    window.web3.eth.getBalance(address || manager.wallet.address, (e, d) => {
+      if (e) reject(e)
+      else resolve(d / Math.pow(10, 18))
+    })
+  })
+}
+
+export const setupFundInvestedFund = async (fundName) => {
+  var environment = await getManager();
+  var balance = await getBalance();
+  console.warn(balance);
+  if (balance < 1.3) {
+    alert('Ensure a minimum balance of 1.3 ETH')
+    return;
+  }
+  const weth = Protocol.getTokenBySymbol(environment, 'WETH');
+  const investmentAmount = createQuantity(weth, 1);
+  var fund = await setupFund(environment, fundName)
+  console.warn(fund);
+  const fundToken = await Protocol.getToken(environment, fund.sharesAddress);
+  await Protocol.deposit(environment, investmentAmount.token.address, undefined, {
+    value: investmentAmount.quantity.toString()
+  })
+  await approve(environment, {
+    howMuch: investmentAmount,
+    spender: fund.participationAddress,
+  });
+  await Protocol.requestInvestment(environment, fund.participationAddress, {
+    investmentAmount,
+    requestedShares: createQuantity(fundToken, 1),
+  });
+  await Protocol.executeRequest(environment, fund.participationAddress);
+  return fund;
+}

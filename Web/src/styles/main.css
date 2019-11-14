@@ -104,7 +104,7 @@
   outline: none;
 }
 
-.asset-view button {
+button {
   background: white;
   border-radius: 0;
   box-shadow: none;
@@ -154,4 +154,18 @@
 
 .order:hover {
   opacity: 0.6;
+}
+
+
+/*SETUP FUND VIEW*/
+
+.setup-fund-view {
+  height: calc(100vh - 80px);
+  overflow-y: hidden;
+  border-bottom: 1px solid lightgrey;
+  color: grey;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
