@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, AsyncStorage, TextInput } from 'react-native';
+import { View, Text, ScrollView, AsyncStorage, TextInput, Alert } from 'react-native';
 import Title from '../components/title'
 import Button from '../components/button'
 import { getPrivateKey, getHubs, getRoutes } from '../wrapper/melon';
-import { reset } from '../navigation/navigator';
+import { reset, goTo } from '../navigation/navigator';
 
 export default class Mix extends Component {
 
@@ -17,13 +17,14 @@ export default class Mix extends Component {
   render() {
     return <ScrollView contentContainerStyle={{ flex: 1 }}>
       <Title text='Melon Interface' />
-      <View style={{ justifyContent: 'center', padding: 32 }}>
+      <View style={{ justifyContent: 'center', padding: 32, opacity: this.state.isLoading ? 0.5 : 1 }}>
         <Text style={{ fontWeight: 'bold' }}>MNEMONIC 🔐</Text>
         <TextInput
           placeholder={'12-word seed phrase, space seperated'}
           multiline={true}
-          style={{ paddingLeft: 16, paddingTop: 16, borderRadius: 10, borderColor: 'grey', borderWidth: 1, height: 100, marginVertical: 16, width: '100%' }}
+          style={{ paddingHorizontal: 16, paddingTop: 16, borderRadius: 10, borderColor: 'grey', borderWidth: 1, height: 100, marginVertical: 16, width: '100%' }}
           autoCapitalize='none'
+          editable={!this.state.isLoading}
           onChangeText={value => this.mnemonic = value}
         />
         <Text style={{ fontSize: 20, color: 'grey', margin: 16, textAlign: 'center', marginBottom: 32 }}>OR</Text>
@@ -31,8 +32,9 @@ export default class Mix extends Component {
         <TextInput
           placeholder={'0x.....'}
           multiline={true}
-          style={{ paddingLeft: 16, paddingTop: 16, borderRadius: 10, borderColor: 'grey', borderWidth: 1, height: 100, marginVertical: 16, width: '100%' }}
+          style={{ paddingHorizontal: 16, paddingTop: 16, borderRadius: 10, borderColor: 'grey', borderWidth: 1, height: 100, marginVertical: 16, width: '100%' }}
           autoCapitalize='none'
+          editable={!this.state.isLoading}
           onChangeText={value => this.privateKey = value}
         />
       </View>
@@ -72,7 +74,17 @@ export default class Mix extends Component {
     try {
       var hubAddress = await getHubs();
       console.warn(hubAddress);
-      if (!hubAddress) alert('Unable to login')
+      if (!hubAddress) {
+        AsyncStorage.clear()
+        Alert.alert(
+          'No fund found',
+          'Do you want to setup a new fund?',
+          [
+            { text: 'Maybe Later', onPress: () => { } },
+            { text: 'Yes', onPress: () => goTo('Signup', { privateKey }) },
+          ]
+        );
+      }
       else {
         var routes = await getRoutes();
         console.warn(routes);
@@ -82,6 +94,7 @@ export default class Mix extends Component {
       }
       this.setState({ isLoading: false })
     } catch (e) {
+      AsyncStorage.clear()
       this.setState({ isLoading: false })
       alert(e.message)
     }

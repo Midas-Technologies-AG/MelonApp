@@ -6,6 +6,8 @@ var constructEnvironment = require('@melonproject/protocol/lib/utils/environment
 var exchangeAggregate = require('@melonproject/exchange-aggregator')
 var createQuantity = require('@melonproject/token-math').createQuantity
 var HDWalletProvider = require("react-native-truffle-hdwallet-provider");
+var setupFund = require('@melonproject/protocol/lib/contracts/fund/hub/transactions/setupFund').setupFund
+const approve = require("@melonproject/protocol/lib/contracts/dependencies/token/transactions/approve").approve
 import { AsyncStorage } from 'react-native';
 
 import { INFURA_KEY } from '../env'
@@ -105,3 +107,40 @@ var removeDuplicateOrders = (orders) => orders.reduce((collectedOrders, order) =
   if (quantities.indexOf(String(order.trade.base.quantity)) < 0) collectedOrders.push(order)
   return collectedOrders;
 }, new Array());
+
+var getBalance = async (address) => {
+  var environment = await getEnvironment();
+  return new Promise((resolve, reject) => {
+    environment.eth.getBalance(address, (e, d) => {
+      if (e) reject(e)
+      else resolve(d / Math.pow(10, 18))
+    })
+  })
+}
+
+export const setupFundInvestedFund = async (fundName, privateKey) => {
+  var environment = await getManagerFromPrivateKey(privateKey);
+  var balance = await getBalance(environment.wallet.address);
+  console.warn(balance);
+  if (balance < 1.3) {
+    throw new Error('Ensure a minimum balance of 1.3 ETH');
+  }
+  const weth = Protocol.getTokenBySymbol(environment, 'WETH');
+  const investmentAmount = createQuantity(weth, 1);
+  var fund = await setupFund(environment, fundName)
+  console.warn(fund);
+  const fundToken = await Protocol.getToken(environment, fund.sharesAddress);
+  await Protocol.deposit(environment, investmentAmount.token.address, undefined, {
+    value: investmentAmount.quantity.toString()
+  })
+  await approve(environment, {
+    howMuch: investmentAmount,
+    spender: fund.participationAddress,
+  });
+  await Protocol.requestInvestment(environment, fund.participationAddress, {
+    investmentAmount,
+    requestedShares: createQuantity(fundToken, 1),
+  });
+  await Protocol.executeRequest(environment, fund.participationAddress);
+  return fund;
+}
