@@ -14,6 +14,7 @@ export default class Mix extends Component {
       var assetIndex = assets.findIndex(asset => asset.token.address.toLowerCase() === holding.token.address.toLowerCase());
       assets[assetIndex] = Object.assign({}, assets[assetIndex], { quantity: holding.quantity / Math.pow(10, holding.token.decimals) })
     });
+    assets = assets.sort((a, b) => (b.quantity || 0) - (a.quantity || 0))
     this.setState((prevState, props) => Object.assign({}, prevState, { assets, isLoading: false }))
     var { nav, sharePrice } = await getInfo();
     this.setState((prevState, props) => Object.assign({}, prevState, { assets, nav: nav.quantity / Math.pow(10, nav.token.decimals), sharePrice: sharePrice.quote.quantity / sharePrice.base.quantity }))
