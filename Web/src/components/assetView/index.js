@@ -5,7 +5,7 @@ import { makeOrder, getOrders } from '../../wrapper/melon';
 import Order from './order';
 
 class AssetView extends React.Component {
-  state = { addOrders: [], removeOrders: [] }
+  state = { addOrders: [], removeOrders: [], isLoading: true }
 
   async updateOrders() {
     try {
@@ -15,7 +15,7 @@ class AssetView extends React.Component {
       var symbol = this.props.selectedAsset.token.symbol
       var addOrders = await getOrders('WETH', symbol, 'add')
       var removeOrders = await getOrders(symbol, 'WETH', 'remove')
-      this.setState((prevState, props) => Object.assign({}, prevState, { addOrders, removeOrders }))
+      this.setState((prevState, props) => Object.assign({}, prevState, { addOrders, removeOrders, isLoading: false }))
     }
     catch (e) {
       console.error(e.message)
@@ -43,6 +43,7 @@ class AssetView extends React.Component {
         </div>
         {renderButtons(this.handleMakeOrder.bind(this))}
         <h2>ORDERBOOK</h2>
+        {this.state.isLoading ? <img src="https://palisadeutc.com/views/site/images/icons/loading.gif" style={{ height: 26, width: 'auto', position: 'relative', top: 10 }} /> : null}
         <div className="orders">
           {this.state.addOrders.map(order => <Order type="add" order={order} toggleLoading={this.props.toggleLoading} updateOrders={this.updateOrders.bind(this)} />)}
           {this.state.removeOrders.map(order => <Order type="remove" order={order} toggleLoading={this.props.toggleLoading} updateOrders={this.updateOrders.bind(this)} />)}
@@ -63,8 +64,8 @@ class AssetView extends React.Component {
       //TODO reload holdings
     }
     catch (e) {
-      console.error(e);
-      // alert(e)
+      // console.error(e);
+      alert(e)
     }
     this.props.toggleLoading(false)
     this.updateOrders()

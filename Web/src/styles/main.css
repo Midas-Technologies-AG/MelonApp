@@ -1,6 +1,6 @@
 /*Loading VIEW*/
 
-.loading{
+.loading {
   height: calc(100vh - 80px);
   overflow-y: hidden;
   border-bottom: 1px solid lightgrey;
@@ -80,7 +80,9 @@
 }
 
 .asset-view>h2 {
-  margin-left: 48px;
+  margin: 48px;
+  display: inline;
+  margin-right: 10px;
 }
 
 .input-value {
@@ -136,16 +138,19 @@ button {
   border-radius: 50px;
   width: 256px;
   cursor: pointer;
-  margin-top:16px;
-  color:white
+  margin-top: 16px;
+  color: white
 }
-.order.add{
+
+.order.add {
   background-color: lightgreen;
-  color:black
+  color: black
 }
-.order.remove{
+
+.order.remove {
   background-color: #ff3939;
 }
+
 .order>span {
   position: relative;
   bottom: 6px;
@@ -155,7 +160,6 @@ button {
 .order:hover {
   opacity: 0.6;
 }
-
 
 /*SETUP FUND VIEW*/
 

@@ -17,8 +17,9 @@ class Fund extends React.Component {
       var assets = await getAllAssets();
       assets = assets.map(asset => {
         if (holdings[asset.token.symbol]) return Object.assign({}, holdings[asset.token.symbol], asset);
-        else return asset
+        else return Object.assign({}, asset, { quantity: 0 });
       })
+      assets = assets.sort((a, b) => b.quantity - a.quantity)
       this.setState((prevState, props) => Object.assign({}, prevState, { assets, selectedIndex: null }))
     }
     catch (e) {

@@ -21,8 +21,8 @@ class Order extends React.Component {
       //TODO reload holdings
     }
     catch (e) {
-      console.error(e);
-      // alert(e)
+      // console.error(e);
+      alert(e)
     }
     this.props.toggleLoading(false)
     this.props.updateOrders()
