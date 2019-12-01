@@ -1,4 +1,3 @@
-import Web3 from "web3";
 import { INFURA_KEY } from '../env'
 import withPrivateKeySigner from './withPrivateKeySigner'
 var Protocol = require('@melonproject/protocol')
@@ -51,7 +50,6 @@ export var getOrders = async (baseSymbol, quoteSymbol, action) => {
     return validOpenOrders;
   } catch (e) {
     console.warn(e);
-
     return [];
   }
 }
@@ -161,11 +159,10 @@ export const setupFundInvestedFund = async (fundName) => {
 export const cancelOrder = async (id) => {
   var manager = await getManager();
   var tradingAddress = getFundData('trading')
-  var web3 = new Web3(window.web3.currentProvider)
   var order = await Protocol.getOasisDexOrder(manager, manager.deployment.exchangeConfigs.MatchingMarket.exchange, { id })
   return await Protocol.cancelOasisDexOrder(manager, tradingAddress, {
     id: order.id,
-    maker: '0x88D855BdF87b93B956154714109d9a5A22A6AD9B',
+    maker: manager.wallet.address,
     makerAsset: order.sell.token.address,
     takerAsset: order.buy.token.address,
   });

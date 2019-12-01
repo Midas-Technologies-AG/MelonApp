@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, TextInput, Modal, ActivityIndicator, Alert } from 'react-native';
 import Title from '../components/title'
 import { goBack } from '../navigation/navigator';
-import { getOrders, takeOrder, makeOrder } from '../wrapper/melon';
+import { getOrders, takeOrder, makeOrder, cancelOrder } from '../wrapper/melon';
 import assets from '../assets'
 import isTradeableNumber from '../helpers/isTradeableNumber';
 import CMCButton from '../components/cmc';
@@ -45,7 +45,7 @@ export default class Asset extends Component {
           <Text style={{ fontSize: 16, fontWeight: '100', color: 'black' }}>{balance}</Text>
         </View>
       </View>
-      <CMCButton symbol={symbol}/>
+      <CMCButton symbol={symbol} />
       <TextInput
         underlineColorAndroid='transparent'
         placeholder={symbol}
@@ -90,6 +90,9 @@ export default class Asset extends Component {
         <Image source={assets.images.white[action == 'add' ? 'plus' : 'minus']} style={{ height: 16, width: 16, marginLeft: 7, marginTop: 7 }} />
       </View>
       {(action == 'add') ? <Text>{(order.trade.quote.quantity / Math.pow(10, order.trade.quote.token.decimals)).toFixed(2) + ' ' + order.trade.quote.token.symbol} for {(order.trade.base.quantity / Math.pow(10, 18)).toFixed(2)} Ξ total</Text> : <Text>{(order.trade.base.quantity / Math.pow(10, order.trade.base.token.decimals)).toFixed(2) + ' ' + order.trade.base.token.symbol} for {(order.trade.quote.quantity / Math.pow(10, order.trade.quote.token.decimals)).toFixed(2)} Ξ total</Text>}
+      {order.isMine ? <TouchableOpacity onPress={() => this.handleCancelOrder(order)} style={{ height: 30, width: 30, borderRadius: 15, backgroundColor: 'lightgrey', marginHorizontal: 16 }}>
+        <Text style={{ fontSize: 24, textAlign: 'center', fontWeight: '700', bottom: 2, left: 1, color: 'white' }}>x</Text>
+      </TouchableOpacity> : null}
     </TouchableOpacity>
   }
 
@@ -98,6 +101,20 @@ export default class Asset extends Component {
     try {
       await takeOrder(order.original.id);
       Alert.alert("Success", "Successfully proccessed order " + order.original.id, [
+        { text: 'OK', onPress: () => goBack() },
+      ]);
+    }
+    catch (e) {
+      Alert.alert("Error", e.message, [
+        { text: 'OK', onPress: () => this.setState((prevState, props) => Object.assign({}, prevState, { isOrdering: false })) },
+      ]);
+    }
+  }
+  async handleCancelOrder(order){
+    this.setState((prevState, props) => Object.assign({}, prevState, { isOrdering: true }))
+    try {
+      await cancelOrder(order.original.id);
+      Alert.alert("Success", "Successfully cancelled order " + order.original.id, [
         { text: 'OK', onPress: () => goBack() },
       ]);
     }

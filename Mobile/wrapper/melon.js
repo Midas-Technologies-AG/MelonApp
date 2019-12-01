@@ -36,13 +36,36 @@ export var getOrders = async (baseSymbol, quoteSymbol, action) => {
     } catch (e) {
       console.warn(e.message);
     }
+    var tradingAddress = (await getFundData('trading')).toLowerCase()
     orders = removeDuplicateOrders(orders);
     var filteredOrders = orders.filter(o => o.type == 'BID');
     (action == 'add') ? filteredOrders.sort((a, b) => Number(a.trade.base.quantity) - Number(b.trade.base.quantity)) : filteredOrders.sort((a, b) => Number(b.trade.base.quantity) - Number(a.trade.base.quantity))
-    return filteredOrders;
+    var validOpenOrdersPromises = filteredOrders.map(async order => {
+      try {
+        var enhancedOrder = await Protocol.getOasisDexOrder(manager, manager.deployment.exchangeConfigs.MatchingMarket.exchange, { id: order.original.id })
+        return Object.assign({}, order, { isMine: enhancedOrder.owner.toLowerCase() === tradingAddress });
+      } catch (e) {
+        console.warn("" + e);
+      }
+    })
+    var validOpenOrders = (await Promise.all(validOpenOrdersPromises)).filter(order => !!order);
+    return validOpenOrders;
   } catch (e) {
+    console.warn(e);
     return [];
   }
+}
+
+export const cancelOrder = async (id) => {
+  var manager = await getManagerFromAsyncStorage();
+  var tradingAddress = await getFundData('trading')
+  var order = await Protocol.getOasisDexOrder(manager, manager.deployment.exchangeConfigs.MatchingMarket.exchange, { id })
+  return await Protocol.cancelOasisDexOrder(manager, tradingAddress, {
+    id: order.id,
+    maker: manager.wallet.address,
+    makerAsset: order.sell.token.address,
+    takerAsset: order.buy.token.address,
+  });
 }
 
 var getFundData = async (spoke) => JSON.parse(await AsyncStorage.getItem('fund'))[spoke];
