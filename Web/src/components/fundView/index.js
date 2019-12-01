@@ -3,7 +3,7 @@ import { getHoldings, getAllAssets } from '../../wrapper/melon'
 import getImageUrl from '../../helpers/getImageUrl';
 
 class Fund extends React.Component {
-  state = { assets: [], selectedIndex: null }
+  state = { assets: [], selectedIndex: 0 }
 
   async componentDidMount() {
     try {
@@ -20,7 +20,8 @@ class Fund extends React.Component {
         else return Object.assign({}, asset, { quantity: 0 });
       })
       assets = assets.sort((a, b) => b.quantity - a.quantity)
-      this.setState((prevState, props) => Object.assign({}, prevState, { assets, selectedIndex: null }))
+      this.selectAsset(assets[0],0)
+      this.setState((prevState, props) => Object.assign({}, prevState, { assets, selectedIndex: 0 }))
     }
     catch (e) {
       console.error(e.message)
@@ -36,6 +37,8 @@ class Fund extends React.Component {
   }
 
   renderAsset(asset, i) {
+    console.warn(this.state.selectedIndex);
+    
     return (<div key={asset.token.symbol} className={i == this.state.selectedIndex ? "asset selected" : "asset"} onClick={_ => this.selectAsset(asset, i)}>
       <img src={getImageUrl(asset.token.symbol)} height="40" width="40" />
       <span className="title">{asset.token.symbol}</span>

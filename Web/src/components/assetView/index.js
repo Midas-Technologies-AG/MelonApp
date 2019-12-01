@@ -15,6 +15,8 @@ class AssetView extends React.Component {
       var symbol = this.props.selectedAsset.token.symbol
       var addOrders = await getOrders('WETH', symbol, 'add')
       var removeOrders = await getOrders(symbol, 'WETH', 'remove')
+      console.warn(removeOrders);
+      
       this.setState((prevState, props) => Object.assign({}, prevState, { addOrders, removeOrders, isLoading: false }))
     }
     catch (e) {
@@ -33,6 +35,8 @@ class AssetView extends React.Component {
   }
   render() {
     var { selectedAsset } = this.props;
+    console.warn(selectedAsset);
+    
     return (
       <div className="asset-view">
         <h1>{selectedAsset.token.name}</h1>
@@ -61,7 +65,6 @@ class AssetView extends React.Component {
     try {
       await makeOrder(selectedAsset, wethValue, assetValue, action)
       alert('Order made successfully')
-      //TODO reload holdings
     }
     catch (e) {
       // console.error(e);

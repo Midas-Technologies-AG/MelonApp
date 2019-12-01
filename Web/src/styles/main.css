@@ -139,7 +139,8 @@ button {
   width: 256px;
   cursor: pointer;
   margin-top: 16px;
-  color: white
+  color: white;
+  display: inline-block;
 }
 
 .order.add {
@@ -151,10 +152,28 @@ button {
   background-color: #ff3939;
 }
 
+.order.cancel{
+  background-color: #d2d2d2;
+  width: 70px;
+  height: 29px;
+  margin-top: 0;
+  position: relative;
+  top: -7px;
+  left:12px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 5px #d2d2d2;
+}
+
 .order>span {
   position: relative;
   bottom: 6px;
   left: 10px;
+}
+
+.order.cancel>span {
+  position: unset;
 }
 
 .order:hover {

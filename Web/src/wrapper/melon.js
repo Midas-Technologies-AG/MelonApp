@@ -1,6 +1,6 @@
+import Web3 from "web3";
 import { INFURA_KEY } from '../env'
 import withPrivateKeySigner from './withPrivateKeySigner'
-import Web3 from 'web3'
 var Protocol = require('@melonproject/protocol')
 var takeOasisDexOrder = require('@melonproject/protocol/lib/contracts/fund/trading/transactions/takeOasisDexOrder').takeOasisDexOrder
 var withDeployment = require('@melonproject/protocol/lib/utils/environment/withDeployment').withDeployment
@@ -41,8 +41,17 @@ export var getOrders = async (baseSymbol, quoteSymbol, action) => {
     orders = removeDuplicateOrders(orders);
     var filteredOrders = orders.filter(o => o.type == 'BID');
     (action == 'add') ? filteredOrders.sort((a, b) => Number(a.trade.base.quantity) - Number(b.trade.base.quantity)) : filteredOrders.sort((a, b) => Number(b.trade.base.quantity) - Number(a.trade.base.quantity))
-    return filteredOrders;
+    var validOpenOrdersPromises = filteredOrders.map(async order => {
+      try {
+        var enhancedOrder = await Protocol.getOasisDexOrder(manager, manager.deployment.exchangeConfigs.MatchingMarket.exchange, { id: order.original.id })
+        return Object.assign({}, order, { isMine: enhancedOrder.owner.toLowerCase() === getFundData('trading').toLowerCase() });
+      } catch (e) { }
+    })
+    var validOpenOrders = (await Promise.all(validOpenOrdersPromises)).filter(order => !!order);
+    return validOpenOrders;
   } catch (e) {
+    console.warn(e);
+
     return [];
   }
 }
@@ -147,4 +156,17 @@ export const setupFundInvestedFund = async (fundName) => {
   });
   await Protocol.executeRequest(environment, fund.participationAddress);
   return fund;
+}
+
+export const cancelOrder = async (id) => {
+  var manager = await getManager();
+  var tradingAddress = getFundData('trading')
+  var web3 = new Web3(window.web3.currentProvider)
+  var order = await Protocol.getOasisDexOrder(manager, manager.deployment.exchangeConfigs.MatchingMarket.exchange, { id })
+  return await Protocol.cancelOasisDexOrder(manager, tradingAddress, {
+    id: order.id,
+    maker: '0x88D855BdF87b93B956154714109d9a5A22A6AD9B',
+    makerAsset: order.sell.token.address,
+    takerAsset: order.buy.token.address,
+  });
 }
