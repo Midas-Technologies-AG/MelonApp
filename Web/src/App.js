@@ -6,15 +6,17 @@ import Header from './components/header';
 import Fund from './components/fundView';
 import AssetView from './components/assetView';
 import SetupFund from './components/setupFund';
+import "react-toggle/style.css"
 
 class App extends React.Component {
 
   constructor(props, context) {
     super(props)
-    this.state = { assets: new Array(), selectedIndex: null, isLoading: true, hasValidFund: false, error: true }
+    this.state = { assets: new Array(), selectedIndex: null, isLoading: true, hasValidFund: false, error: true, aum: 0 }
   }
 
   async componentDidMount() {
+
     if (!window.ethereum) {
       alert('Please ensure you have Metamask');
       return;
@@ -39,7 +41,7 @@ class App extends React.Component {
     if (this.state.error) return <div></div>
     return (
       <div>
-        {this.state.hasValidFund ? <Header /> : null}
+        {this.state.hasValidFund ? <Header aum={this.state.aum} /> : null}
         <main style={{ display: this.state.isLoading ? 'flex' : 'none' }}>
           <div className="loading">
             <img src="https://icon-library.net/images/loading-icon-animated-gif/loading-icon-animated-gif-1.jpg" height="33" />
@@ -48,7 +50,7 @@ class App extends React.Component {
         </main>
 
         {this.state.hasValidFund ? <main style={{ display: !this.state.isLoading ? 'flex' : 'none' }}>
-          <Fund selectAsset={this.selectAsset.bind(this)} />
+          <Fund selectAsset={this.selectAsset.bind(this)} setAum={this.setAum.bind(this)} />
           {(!selectedAsset) ? null : <AssetView selectedAsset={this.state.selectedAsset} toggleLoading={this.toggleLoading.bind(this)} />}
         </main> : <main style={{ display: !this.state.isLoading ? 'flex' : 'none' }}>
             <SetupFund toggleLoading={this.toggleLoading.bind(this)} />
@@ -61,6 +63,9 @@ class App extends React.Component {
     this.setState((prevState, props) => Object.assign({}, prevState, { selectedAsset }))
   }
 
+  async setAum(aum) {
+    this.setState((prevState, props) => Object.assign({}, prevState, { aum }))
+  }
 
   async toggleLoading(isLoading) {
     this.setState((prevState, props) => Object.assign({}, prevState, { isLoading }))

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getHoldings, getAllAssets } from '../../wrapper/melon'
+import { getHoldings, getAllAssets, calculateAUM } from '../../wrapper/melon'
 import getImageUrl from '../../helpers/getImageUrl';
 
 class Fund extends React.Component {
@@ -9,7 +9,7 @@ class Fund extends React.Component {
     try {
       var holdings = await getHoldings();
       holdings = holdings.reduce((assets, asset) => {
-        asset.quantity = (asset.quantity / Math.pow(10, asset.token.decimals)).toFixed(2)
+        asset.quantity = (asset.quantity / Math.pow(10, asset.token.decimals))
         assets[asset.token.symbol] = asset;
         return assets;
       }, {})
@@ -20,7 +20,8 @@ class Fund extends React.Component {
         else return Object.assign({}, asset, { quantity: 0 });
       })
       assets = assets.sort((a, b) => b.quantity - a.quantity)
-      this.selectAsset(assets[0],0)
+      this.props.setAum(await calculateAUM(holdings))
+      this.selectAsset(assets[0], 0)
       this.setState((prevState, props) => Object.assign({}, prevState, { assets, selectedIndex: 0 }))
     }
     catch (e) {
@@ -37,14 +38,12 @@ class Fund extends React.Component {
   }
 
   renderAsset(asset, i) {
-    console.warn(this.state.selectedIndex);
-    
     return (<div key={asset.token.symbol} className={i == this.state.selectedIndex ? "asset selected" : "asset"} onClick={_ => this.selectAsset(asset, i)}>
       <img src={getImageUrl(asset.token.symbol)} height="40" width="40" />
       <span className="title">{asset.token.symbol}</span>
       <br />
       <div className="subtitle">{asset.token.name}</div>
-      <div className="balance">{asset.quantity || 0}</div>
+      <div className="balance">{asset.quantity.toFixed(2) || 0}</div>
     </div>
     );
   }

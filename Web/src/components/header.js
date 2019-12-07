@@ -18,7 +18,10 @@ class Header extends React.Component {
   render() {
     return (<header>
       <span className="fund-name">{this.state.name}</span>
-      <span className="share-price"><span style={{ fontWeight: 100 }}>{this.state.sharePrice ? 'SHARE PRICE' : ''}</span> {this.state.sharePrice || '...'}</span>
+      <div className="fund-info">
+        <span className="share-price"><span style={{ color: 'grey' }}>{this.state.sharePrice ? 'SHARE PRICE' : ''}</span>  {this.state.sharePrice || '...'}</span>
+        <span className="aum"><span style={{ color: 'grey' }}>{this.props.aum ? 'AUM' : ''}</span>  {this.props.aum || '...'}</span>
+      </div>
     </header>);
   }
 }

@@ -1,5 +1,8 @@
+import Web3 from 'web3'
 import { INFURA_KEY } from '../env'
 import withPrivateKeySigner from './withPrivateKeySigner'
+import getTokenAddress from '../helpers/getTokenAddress'
+import ConversionRatesAbi from '../helpers/ConversionRates.abi'
 var Protocol = require('@melonproject/protocol')
 var takeOasisDexOrder = require('@melonproject/protocol/lib/contracts/fund/trading/transactions/takeOasisDexOrder').takeOasisDexOrder
 var withDeployment = require('@melonproject/protocol/lib/utils/environment/withDeployment').withDeployment
@@ -166,4 +169,21 @@ export const cancelOrder = async (id) => {
     makerAsset: order.sell.token.address,
     takerAsset: order.buy.token.address,
   });
+}
+
+export const calculateAUM = async (holdings) => {
+  var manager = await getManager();
+  const endpoint = 'https://mainnet.infura.io/v3/' + INFURA_KEY;
+  var web3 = new Web3(endpoint)
+  
+  var contract = new web3.eth.Contract(ConversionRatesAbi, '0x798AbDA6Cc246D0EDbA912092A2a3dBd3d11191B')
+  var getBlockNumber = await web3.eth.getBlockNumber()
+  return await Object.values(holdings).reduce(async (sum, holding) => {
+    var sum = await sum;
+    if (holding.token.symbol == 'WETH') return sum + holding.quantity
+    var value = ((await contract.methods.getRate(getTokenAddress(holding.token.symbol), getBlockNumber, false, 1).call()) / Math.pow(10, holding.token.decimals)) * holding.quantity
+    console.warn(value);
+    
+    return sum + value;
+  }, 0)
 }

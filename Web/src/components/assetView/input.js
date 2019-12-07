@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default (asset) => {
-  return <input id={"value-" + asset} type="number" placeholder={asset} className="input-value" />
+export default (asset, placeholder) => {
+  return <input id={"value-" + asset} type="number" placeholder={placeholder} className="input-value" />
 }

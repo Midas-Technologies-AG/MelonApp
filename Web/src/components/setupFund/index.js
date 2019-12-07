@@ -14,11 +14,11 @@ class Fund extends React.Component {
   render() {
     return (
       <div className="setup-fund-view" style={{ flexDirection: 'column' }}>
-        <h2>Please proceed to create a new fund</h2>
+        <span>Please proceed to create a new fund</span>
         <br />
-        <input id={"fund-name"} placeholder={'Fund name....'} className="input-value" />
+        <input id={"fund-name"} placeholder={'Fund name'} className="input-value" />
         <br /><br /><br />
-        <button onClick={this.setupFund.bind(this)} style={{ backgroundColor: 'black', color: 'white', width: 'auto' }}>SETUP FUND</button>
+        <button onClick={this.setupFund.bind(this)}>Setup Fund</button>
       </div>
     );
   }

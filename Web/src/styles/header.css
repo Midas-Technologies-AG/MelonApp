@@ -3,6 +3,14 @@
   font-weight: 900;
 }
 
-.share-price {
-  font-weight: 900;
+.share-price, .aum {
+  font-weight: 100;
+}
+
+.fund-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  position: relative;
+  bottom: 3px;
 }
