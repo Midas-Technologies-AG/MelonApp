@@ -115,7 +115,7 @@ The first part is the name and the balance.
 
 Then, there is the form to create a new order in the exchange for the selected asset with _WETH_ in OasisDex.
 
-![make order](https://github.com/Midas-Technologies-AG/MelonApp/blob/master/Web/docs/make%order.png?raw=true)
+![make order](https://github.com/Midas-Technologies-AG/MelonApp/blob/master/Web/docs/make%20order.png?raw=true)
 
 There are two input fields. They use explicit placeholder messages to indicate intended use.
 ```
@@ -159,6 +159,7 @@ button {
 ```
 
 Then on, orderbook is used to list orders that already exist on the exchange. One can just click on them to take given order.
+
 ![take order](https://github.com/Midas-Technologies-AG/MelonApp/blob/master/Web/docs/orderbook.png?raw=true)
 
 In the list of buy/sell orders, use traditional green and red differentiation with corresponding plus and minus icons.
