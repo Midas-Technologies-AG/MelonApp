@@ -1,7 +1,6 @@
 import React from 'react';
 import './styles/main.css'
-import './styles/header.css'
-import { getAllAssets, getName, getHubs, getRoutes, getHoldings, getInfo, getOrders, takeOrder, makeOrder } from './wrapper/melon'
+import { getHubs, getRoutes } from './wrapper/melon'
 import Header from './components/header';
 import Fund from './components/fundView';
 import AssetView from './components/assetView';
@@ -42,7 +41,7 @@ class App extends React.Component {
     return (
       <div>
         {this.state.hasValidFund ? <Header aum={this.state.aum} /> : null}
-        <main style={{ display: this.state.isLoading ? 'flex' : 'none' }}>
+        <main style={{ display: !this.state.isLoading ? 'flex' : 'none' }}>
           <div className="loading">
             <img src="https://icon-library.net/images/loading-icon-animated-gif/loading-icon-animated-gif-1.jpg" height="33" />
             <h1>Loading</h1>

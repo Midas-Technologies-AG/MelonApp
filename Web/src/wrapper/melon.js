@@ -172,7 +172,6 @@ export const cancelOrder = async (id) => {
 }
 
 export const calculateAUM = async (holdings) => {
-  var manager = await getManager();
   const endpoint = 'https://mainnet.infura.io/v3/' + INFURA_KEY;
   var web3 = new Web3(endpoint)
   
