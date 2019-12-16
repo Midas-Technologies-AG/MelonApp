@@ -164,6 +164,8 @@ Then on, orderbook is used to list orders that already exist on the exchange. On
 
 In the list of buy/sell orders, use traditional green and red differentiation with corresponding plus and minus icons.
 
+Further reading on the design system: Web/docs/Ash-Open-interface-design-system.pdf
+
 ## Architecture
 
 ![Operations](https://github.com/Midas-Technologies-AG/MelonApp/raw/master/Web/docs/architecture.jpg)
