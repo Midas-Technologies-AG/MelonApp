@@ -19,18 +19,18 @@
     "@melonproject/protocol": "^1.0.0-patched-1",
     "@melonproject/token-math": "^0.1.6",
     "expect": "^24.8.0",
+    "jsbi": "2.0.5",
     "node-libs-react-native": "git+https://github.com/kunsachdeva/node-libs-react-native.git",
     "react": "16.8.3",
     "react-native": "0.59.8",
     "react-native-gesture-handler": "^1.4.1",
+    "react-native-truffle-hdwallet-provider": "git+https://github.com/bpeters/react-native-truffle-hdwallet-provider.git",
     "react-navigation": "^4.0.10",
     "react-navigation-stack": "^1.9.1",
-    "react-native-truffle-hdwallet-provider": "git+https://github.com/bpeters/react-native-truffle-hdwallet-provider.git",
     "stream-browserify": "^2.0.2",
     "vm-browserify": "^1.1.0",
     "web3": "^1.0.0-beta.37",
-    "web3-eth-accounts": "^1.0.0-beta.37",
-    "jsbi": "2.0.5"
+    "web3-eth-accounts": "^1.0.0-beta.37"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
