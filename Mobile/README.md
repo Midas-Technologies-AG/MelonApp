@@ -1,7 +1,7 @@
 # Mobile Interface
 This is React Native based implementation of a mobile interface for Melon Projects's JavaScript Library.
 
-![Screenshot](https://github.com/Midas-Technologies-AG/MelonApp/raw/master/Mobile/docs/main.png =320x)
+<img src="https://raw.githubusercontent.com/Midas-Technologies-AG/MelonApp/master/Mobile/docs/main.png" alt="" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" height="520" />
 
 ## Installation
  `npm install`
