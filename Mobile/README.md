@@ -13,6 +13,28 @@ This is React Native based implementation of a mobile interface for Melon Projec
 __Android__:  `react-native run-android`
 __iOS__: `react-native run-ios`
 
+## Code Structure
+
+The code is derived from standard React Native boilerplate. 
+The `assets` folder contains the static content.
+`views` and `components` folder contains the dynamic source code. Views are the screens that consume components.
+
+The `views` source is layered to contain different view states. They are:
+- A view for setting up a new fund which takes in the name of the fund. Or logging into existing one
+- A view for listing all the assets in a fund, called fund/mix view.
+- A view for showing the details of a given asset.  
+  
+These modules are can be easily extended to include more assets.  
+
+Then there are components such as buttons, list view items, titles, etc. that are consumed by views.
+
+The stylings corresponding to each component is inline and may be separated into distinct style sheets for modularity.
+
+Finally, in order to implement various functionalities of Melon Protocol, we made a `wrapper` around existing functions. This wrapper exposes functions to carry out operations that can be clubbed together so that their binding with components become easier.
+
+This wrapper is used to export functions viz. `getHoldings`, `makeOrder`, `takeOrder`, and so on.  
+This, too, is extensible and modular. It works independent of the components mentioned above.
+
 ## Architecture
 
 ![Operations](https://github.com/Midas-Technologies-AG/MelonApp/raw/master/Mobile/docs/architecture.jpg)
