@@ -1,19 +1,14 @@
-# Using Melon Protocol in Mobile App  
+# Mobile Interface
+This is React Native based implementation of a mobile interface for Melon Projects's JavaScript Library.
 
-This project uses [React Native](https://facebook.github.io/react-native/docs/getting-started.html) to implement [melon.js protocol](https://github.com/melonproject/protocol).
+![Screenshot](https://github.com/Midas-Technologies-AG/MelonApp/raw/master/Mobile/docs/main.png)
 
-## [JUGAAD](https://en.wikipedia.org/wiki/Jugaad)
-
-react-native link react-native-fs   
-
-react-native link react-native-tls   
-
-react-native link react-native-randombytes   
-
-react-native link react-native-gesture-handler
-
-sed -i.bk 's/${Contracts.//' node_modules/@melonproject/protocol/lib/Contracts.js  
-
-sed -i.bk 's/}.abi.json/.abi.json/' node_modules/@melonproject/protocol/lib/Contracts.js    
-
-sed -i.bk 's/${deploymentId}.json/kovan-kyberPrice.json/' node_modules/@melonproject/protocol/lib/utils/environment/withDeployment.js
+## Installation
+ `npm install`
+  `npm run patch`*
+   `react-native start`
+  \
+  \
+  The next steps are platform specific:
+__Android__:  `react-native run-android`
+__iOS__: `react-native run-ios`
