@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles/header.css'
+import '../styles/header.css'
 import { getName, getInfo } from '../wrapper/melon'
 
 class Header extends React.Component {
