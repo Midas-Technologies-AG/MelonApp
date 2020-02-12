@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { INFURA_KEY } from '../env'
+import { INFURA_KEY } from '../.env'
 import withPrivateKeySigner from './withPrivateKeySigner'
 import getTokenAddress from '../helpers/getTokenAddress'
 import ConversionRatesAbi from '../helpers/ConversionRates.abi'
