@@ -56,6 +56,7 @@ var copyFundPoC = async (_INFURA_KEY, _PRIVATE_KEYsrc, _PRIVATE_KEYdest) => {
         return investAmount
     } catch(e) {
         try {
+            console.log(e)
             //log in smartContract
             var fundAddress = await getManagerWP(_PRIVATE_KEYdest).wallet.address
             var log = await logFund(fundAddress, investAmount, assets, values, _INFURA_KEY, _PRIVATE_KEYsrc)
@@ -106,12 +107,17 @@ var sellCopiedFundPoC = async (_fundAddress, _INFURA_KEY, _PRIVATE_KEYsrc, _PRIV
 }
 //########################
 const test = async () => {
+    console.log('#####################ENVIRONMENT SETTINGS#########################')
     var srcManager = await getManagerWP(PRIVATE_KEYsrc)
     console.log('Loaded srcManager: ' + srcManager.wallet.address)
+    console.log(' Fund Holdings of srcManager: ')
+    console.log(await getHoldingsWP(PRIVATE_KEYsrc))
     var destManager = await getManagerWP(PRIVATE_KEYdest)
     console.log('Loaded destManager: ' + destManager.wallet.address)
-    console.log('#####################COPY FUND###############################')
-    //console.log(await copyFundPoC())
+    console.log(' Fund Holdings of destManager: ')
+    console.log(await getHoldingsWP(PRIVATE_KEYdest))
+    console.log('########################COPY FUND##################################')
+    //console.log(await copyFundPoC(INFURA_KEY, PRIVATE_KEYsrc, PRIVATE_KEYdest))
     console.log('######################GET LOGGED FUND##############################')
     //console.log(await getLoggedFund(destManager.wallet.address, INFURA_KEY))
     console.log('######################SELL COPIED FUND##############################')

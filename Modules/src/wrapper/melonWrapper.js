@@ -1,6 +1,5 @@
 const dotenv = require('dotenv');
 dotenv.config();
-const ENDPOINT = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
 
 const Web3 = require('web3')
 const getTokenAddress = require('./getTokenAddress')
@@ -18,6 +17,12 @@ const fundFactory = require('@melonproject/protocol/out/FundFactory.abi.json')
 
 const { createQuantity, appendDecimals, toBI } = require('@melonproject/token-math')
 var exchangeAggregate = require('@melonproject/exchange-aggregator')
+
+const {
+  INFURA_KEY
+} = require('../../.env')
+
+const ENDPOINT = 'https://kovan.infura.io/v3/' + INFURA_KEY
 
 
 var getEnvironment = () => constructEnvironment({endpoint: ENDPOINT, track: 'kyberPrice', deployment: DEPLOYMENT})
