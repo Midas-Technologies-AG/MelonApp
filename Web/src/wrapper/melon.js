@@ -1,8 +1,9 @@
 import Web3 from 'web3'
-import { INFURA_KEY } from '../.env.local'
+import {INFURA_KEY} from '../env'
 import withPrivateKeySigner from './withPrivateKeySigner'
 import getTokenAddress from '../helpers/getTokenAddress'
 import ConversionRatesAbi from '../helpers/ConversionRates.abi'
+
 var Protocol = require('@melonproject/protocol')
 var takeOasisDexOrder = require('@melonproject/protocol/lib/contracts/fund/trading/transactions/takeOasisDexOrder').takeOasisDexOrder
 var withDeployment = require('@melonproject/protocol/lib/utils/environment/withDeployment').withDeployment

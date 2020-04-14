@@ -31,7 +31,7 @@ class App extends React.Component {
       localStorage.setItem('fund', JSON.stringify(Object.assign({}, routes, { hubAddress })))
       this.setState((prevState, props) => Object.assign({}, prevState, { isLoading: false, hasValidFund: true, error: false }))
     } catch (e) {
-      alert('Please ensure you have Metamask logged in with Kovan testnet with a fund setup');
+      alert('Please ensure you have Metamask logged in with Kovan testnet with a fund setup' + e);
     }
   }
 

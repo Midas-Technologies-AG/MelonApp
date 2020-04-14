@@ -5,8 +5,22 @@ This is React.js based implementation of a web interface for Melon Projects's Ja
 ![Screenshot](https://github.com/Midas-Technologies-AG/MelonApp/raw/master/Web/docs/screenshot.png)
 
 ## Installation
+
+### Mobile
 - `npm install`
 - `npm run start`
+
+### Web
+- `npm install`
+- create a `env.js` file in `.src/Web/`
+- `npm run start`
+
+The `env.js` should look like this:
+```
+var INFURA_KEY='<your-api-key>'
+
+module.exports.INFURA_KEY = INFURA_KEY
+```
 
 ## Code Structure
 
