@@ -1,2 +1,5 @@
 .DS_Store
 Web/src/env.js
+Modules/.env.js
+Modules/node_modules/
+Modules/log

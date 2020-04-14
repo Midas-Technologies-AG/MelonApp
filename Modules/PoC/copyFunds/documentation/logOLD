@@ -1,0 +1,126 @@
+logs:
+holdings:
+[ { token:
+     { address: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
+       decimals: 18,
+       symbol: 'WETH' },
+    quantity: { [String: '296432170017164412'] value: [JSBI] } },
+  { token:
+     { address: '0x2C2edf394638931eb672BD9261d2AA1934874d45',
+       decimals: 18,
+       symbol: 'MLN' },
+    quantity: { [String: '34648053943224245570'] value: [JSBI] } },
+  { token:
+     { address: '0x0A3610a0E87cEDDEE6b81b62b462c7a0fD450E2a',
+       decimals: 18,
+       symbol: 'ZRX' },
+    quantity: { [String: '5997594648800797700'] value: [JSBI] } },
+  { token:
+     { address: '0xB5098BAFbF90F278374EcFA973A703fD0eb87A12',
+       decimals: 18,
+       symbol: 'KNC' },
+    quantity: { [String: '13324331000000000000'] value: [JSBI] } },
+  { token:
+     { address: '0xB14c0f4a8150c028806bE46Afb5214daea870CB7',
+       decimals: 18,
+       symbol: 'BAT' },
+    quantity: { [String: '826000'] value: [JSBI] } } ]
+
+
+AUM             0.330260749632839
+AUMwithoutWETH  0.03382857961567455
+WETH            0.29643217001716443
+
+--------------------21.02----------------------
+
+logFund failed: invalid number value (arg="values", coderType="uint256", value=5.997594648800797)
+undefined
+Could not makeOrder Insufficient WETH. Got: 0.296432, need: 0.296432
+undefined
+Could not makeOrder Insufficient MLN. Got: 34.648053, need: 34.648053
+undefined
+{ buy:
+   { token:
+      { address: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
+        decimals: 18,
+        symbol: 'WETH' },
+     quantity: { [String: '6622693450496342'] value: [JSBI] } },
+  id: 37487,
+  maker: '0x34B55262cF8367E4c799Bf3008F05fF0070b918c',
+  matched: false,
+  sell:
+   { token:
+      { address: '0x0A3610a0E87cEDDEE6b81b62b462c7a0fD450E2a',
+        decimals: 18,
+        symbol: 'ZRX' },
+     quantity: { [String: '5997594648800797000'] value: [JSBI] } },
+  timestamp: '1583270116' }
+{ buy:
+   { token:
+      { address: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
+        decimals: 18,
+        symbol: 'WETH' },
+     quantity: { [String: '39313991278297790'] value: [JSBI] } },
+  id: 37488,
+  maker: '0x34B55262cF8367E4c799Bf3008F05fF0070b918c',
+  matched: false,
+  sell:
+   { token:
+      { address: '0xB5098BAFbF90F278374EcFA973A703fD0eb87A12',
+        decimals: 18,
+        symbol: 'KNC' },
+     quantity: { [String: '13324331000000000000'] value: [JSBI] } },
+  timestamp: '1583270124' }
+Could not makeOrder Cannot convert 826e-13000000000000 to a BigInt
+undefined
+ReferenceError: assets is not defined
+    at sellCopiedFund (/home/ubugo/github/midas/tester/src/sellCopiedFund.js:37:14)
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+
+-------------------------10.03.2020----------------------------------------------
+
+  $ node main:
+  
+{ manager: '0x88D855BdF87b93B956154714109d9a5A22A6AD9B',
+  amount: 2,
+  assets:
+   [ '0x0A3610a0E87cEDDEE6b81b62b462c7a0fD450E2a',
+     '0xB5098BAFbF90F278374EcFA973A703fD0eb87A12' ],
+  values:
+   [ { [String: '5997594648800797700'] value: [JSBI] },
+     { [String: '13324331000000000000'] value: [JSBI] } ] }
+195437
+{ blockHash:
+   '0xb5aa1b404994e9d2a89ffd0136ec6bd991cb76f13e721e5c70750783aa20b2be',
+  blockNumber: 17296259,
+  contractAddress: null,
+  cumulativeGasUsed: 312574,
+  from: '0x88d855bdf87b93b956154714109d9a5a22a6ad9b',
+  gasUsed: 195437,
+  logsBloom:
+   '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000001000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000080000000000',
+  root: null,
+  status: true,
+  to: '0xac004a6655c5fa2289bb8a15e4f02baa3afe5905',
+  transactionHash:
+   '0xe460381392aeaa952039f669936c7c1dd64aef592a1e8dd49a5bd8d3823b23c5',
+  transactionIndex: 2,
+  events:
+   { CopiedAfund:
+      { address: '0xaC004A6655c5fa2289Bb8A15E4F02baA3AfE5905',
+        blockHash:
+         '0xb5aa1b404994e9d2a89ffd0136ec6bd991cb76f13e721e5c70750783aa20b2be',
+        blockNumber: 17296259,
+        logIndex: 1,
+        removed: false,
+        transactionHash:
+         '0xe460381392aeaa952039f669936c7c1dd64aef592a1e8dd49a5bd8d3823b23c5',
+        transactionIndex: 2,
+        transactionLogIndex: '0x0',
+        type: 'mined',
+        id: 'log_bc93a230',
+        returnValues: [Result],
+        event: 'CopiedAfund',
+        signature:
+         '0xb31e33317cb9d20e8c9907b2559f89f5bbaf50046ab5eab7f4f5079d0747e1af',
+        raw: [Object] } } }
