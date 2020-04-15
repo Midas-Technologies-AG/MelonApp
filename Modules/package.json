@@ -1,5 +1,5 @@
 {
-  "name": "midasmodules",
+  "name": "MelonModules",
   "version": "0.1.1",
   "description": "This is a repository of modules for the @melonproject/protocol Fundmanagement system.",
   "main": "index.js",

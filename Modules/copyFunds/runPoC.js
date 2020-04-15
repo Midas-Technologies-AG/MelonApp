@@ -1,19 +1,25 @@
-const dotenv = require('dotenv');
-dotenv.config();
-
-var mlnWrapper = './src/wrapper/melonWrapper'
+var mlnWrapper = '../wrapper/melonWrapper'
 var getManager = require(mlnWrapper).getManager
-var makeOrder = require(mlnWrapper).makeOrder
-var takeOrder = require(mlnWrapper).takeOrder
-var cancelOrder = require(mlnWrapper).cancelOrder
-var getRate = require(mlnWrapper).getRate
-var getHoldings = require(mlnWrapper).getHoldings
+var getRoutesOf = require(mlnWrapper).getRoutesOf
+var getFundOpenOrder = require('@melonproject/protocol').getFundOpenOrder
 
 
 //########################
 const test = async () => {
 	try {
-	    var holdings = await getHoldings(process.env.PRIVATE_KEYdest)
+		const manager = await getManager()
+		var routes = await getRoutesOf(manager.wallet.address)
+		console.log(await getFundOpenOrder(manager, routes.trading, 30))
+	}catch(e) {
+		console.log(e)
+	}
+}
+test()
+//########################
+//srcFundManager: 0x88D855BdF87b93B956154714109d9a5A22A6AD9B
+//destFundManager: 0xB9820Ab5aB6256003124cecE3aFE8140F7e55E15
+
+/*	    var holdings = await getHoldings(process.env.PRIVATE_KEYdest)
 	    for (var hold in holdings) {
 	    	if (holdings[hold].token.symbol == 'BAT') {
 	    		var rate = await getRate(holdings[hold])
@@ -33,11 +39,4 @@ const test = async () => {
 	    		)
 	    	}
 	    }
-	}catch(e) {
-		console.log(e)
-	}
-}
-test()
-//########################
-//srcFundManager: 0x88D855BdF87b93B956154714109d9a5A22A6AD9B
-//destFundManager: 0xB9820Ab5aB6256003124cecE3aFE8140F7e55E15
+*/

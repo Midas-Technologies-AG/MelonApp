@@ -1,6 +1,3 @@
-const dotenv = require('dotenv');
-dotenv.config();
-
 const Web3 = require('web3')
 const getTokenAddress = require('./getTokenAddress')
 const ConversionRatesAbi = require('./ConversionRates.abi')
@@ -21,10 +18,9 @@ var exchangeAggregate = require('@melonproject/exchange-aggregator')
 const {
   INFURA_KEY,
   PRIVATE_KEYsrc
-} = require('../../.env')
+} = require('../.env')
 
 const ENDPOINT = 'https://kovan.infura.io/v3/' + INFURA_KEY
-
 
 var getEnvironment = () => constructEnvironment({endpoint: ENDPOINT, track: 'kyberPrice', deployment: DEPLOYMENT})
 var getManager = async () => await withPrivateKeySigner(await getEnvironment(), PRIVATE_KEYsrc)
@@ -162,10 +158,10 @@ var calculateAUMwithoutWETH = async (holdings) => {
     }
   }
 
-  var getOrders = async (baseSymbol, quoteSymbol, action) => {
-    try {
-      var exchanges = ['oasisdex'];
-    var manager = await getManager() //getEnvironment()
+var getOrders = async (baseSymbol, quoteSymbol, action) => {
+  try {
+    var exchanges = ['oasisdex'];
+    var manager = await getManager()
     var options = await generateExchangeAggregatorOptions(baseSymbol, quoteSymbol, manager)
     var orders = [];
     orders = orders.concat(await exchangeAggregate.exchanges[exchanges[0]].fetch(options))

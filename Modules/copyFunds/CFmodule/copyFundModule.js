@@ -237,11 +237,48 @@ var returnAssetToVault = async (_assetAddress, _INFURA_KEY, _PRIVATE_KEY) => {
   }
 }
 
+/*
+TODO: Needs to be called by callFactory? (wrong: via Trading.callonExchange)....
+
+var removeOpenMake = async (_exchangeAddress, _assetAddress, _INFURA_KEY, _PRIVATE_KEY) => {
+  try {
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
+    var web3 = new Web3(endpoint)
+
+    var routes = await getRoutesOf(manager.wallet.address)
+    var tradingContract = new web3.eth.Contract(tradingABI, routes.trading)
+    
+    const inputData = await tradingContract.methods.removeOpenMakeOrder(
+      _exchangeAddress.toString(),
+      _assetAddress.toString()
+    ).encodeABI()
+    
+    const tx = {
+      from: manager.wallet.address, 
+      to: routes.trading,
+      gas: 1000000,
+      value: 0,
+      data: inputData
+    }
+    //sign and send TX
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
+    const signed = signPromise.rawTransaction
+    const sentTx = await web3.eth.sendSignedTransaction(signed)
+    return sentTx
+  }
+  catch (e) {
+    console.log('removeOpenMake failed: ' + e)
+  }
+}*/
+
+
 module.exports = {
   logFund,
   getLoggedFund,
   unlogFund,
   copyFund,
   sellCopiedFund,
-  returnAssetToVault
+  returnAssetToVault,
+  //removeOpenMake
 }

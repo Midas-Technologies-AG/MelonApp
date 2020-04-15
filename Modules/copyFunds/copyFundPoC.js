@@ -5,12 +5,14 @@ var getManagerWP = require(mlnWrapper).getManagerWP
 var getHoldingsWP = require(mlnWrapper).getHoldingsWP
 var makeOrderWP = require(mlnWrapper).makeOrderWP
 var takeOrderWP = require(mlnWrapper).takeOrderWP
+var getOrders = require(mlnWrapper).getOrders
 
 var CFmodule = '../../src/copyFund/copyFundModule'
 var getLoggedFund = require(CFmodule).getLoggedFund
 var logFund = require(CFmodule).logFund
 var unlogFund = require(CFmodule).unlogFund
 var returnAssetToVault = require(CFmodule).returnAssetToVault
+var removeOpenMake = require(CFmodule).removeOpenMake
 
 //environment needed!
 const {
@@ -127,11 +129,22 @@ const test = async () => {
     console.log('######################GET LOGGED FUND##############################')
     //console.log(await getLoggedFund('0x88D855BdF87b93B956154714109d9a5A22A6AD9B', INFURA_KEY))
 }
-test()
+//test()
 
 const test2 = async () => {
     var srcManager = await getManagerWP(PRIVATE_KEYsrc)
     //console.log(await getRoutesOf(srcManager.wallet.address))
-    console.log(await returnAssetToVault('0xd0A1E359811322d97991E03f863a0C30C2cF029C', INFURA_KEY, PRIVATE_KEYsrc))
+/*    console.log(await returnAssetToVault(
+        '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
+        INFURA_KEY,
+        PRIVATE_KEYsrc
+    ))*/
+    console.log(await removeOpenMake(
+        srcManager.deployment.thirdPartyContracts.exchanges.matchingMarket,
+        '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
+        INFURA_KEY,
+        PRIVATE_KEYsrc
+    ))
+    //console.log(await getOrders('WETH', 'BAT'))
 }
-//test2()
+test2()

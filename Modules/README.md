@@ -1,14 +1,14 @@
 # README
 
-This Repository contains the modules `copyFunds` and `multiManager` for the `@melonproject/protocol`.
+This Repository contains the modules `copyFunds` and `multiManager` for the `@melonproject/protocol` proposing a Proof of Concept for both modules.
 
-For the specific module specification checkout the `README.md` in `.PoC/copyFunds` or `.PoC/multiManager`.
-
-Current status of both modules is Proof of Concept, described in `.PoC/*/README.md`.
+For the specific module specification checkout the `README.md` in `./copyFunds` or `./multiManager`.
 
 ## installation
 
-To install this repo run `npm i`. 
+To install the dependencies run `npm install` or `yarn install`.
+
+If you come through go to one of the modules and checkout, what you need to do to be able to test, or open up an issue in this repository or visit the A$H team telegram channel via https://ash.finance
 
 ### known errorhandling
 
