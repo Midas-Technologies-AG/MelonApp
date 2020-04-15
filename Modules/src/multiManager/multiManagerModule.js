@@ -1,6 +1,3 @@
-const dotenv = require('dotenv')
-dotenv.config()
-
 const Web3 = require('web3')
 var Protocol = require('@melonproject/protocol')
 const { createQuantity, appendDecimals, toBI } = require('@melonproject/token-math')
@@ -8,17 +5,17 @@ const stringToBytes32 = require("@melonproject/protocol/lib/utils/helpers/string
 const fundFactory = require('@melonproject/protocol/out/FundFactory.abi.json')
 const tradingABI = require('@melonproject/protocol/out/Trading.abi.json')
 
-var getManager = require('../wrapper/melonWrapper').getManager
+var getManagerWP = require('../wrapper/melonWrapper').getManagerWP
 var getRate = require('../wrapper/melonWrapper').getRate
 var getRoutesOf = require('../wrapper/melonWrapper').getRoutesOf
 const tokenABI = require('../wrapper/erc20Contract.abi.js')
 
 const multiSig = require('./contracts/multiSig.abi.js')
 
-const multiSigAddOwner = async (_newOwner, _multiSigWalletAddress) => {
+const multiSigAddOwner = async (_newOwner, _multiSigWalletAddress), _INFURA_KEY, _PRIVATE_KEY => {
   //creating environment
-  var manager = await getManager()
-  const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
+  var manager = await getManagerWP(_PRIVATE_KEY)
+  const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
   var web3 = new Web3(endpoint)
   var contract = new web3.eth.Contract(multiSig, _multiSigWalletAddress)
   // create function abi
@@ -32,16 +29,16 @@ const multiSigAddOwner = async (_newOwner, _multiSigWalletAddress) => {
     data: contract.methods.submitTransaction(_multiSigWalletAddress, 0, inputData).encodeABI() 
   }
 
-  const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+  const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
   const signed = signPromise.rawTransaction
   
   const sentTx = await web3.eth.sendSignedTransaction(signed)
   return sentTx
 }
 
-const confirmTx = async (_id, _multiSigWalletAddress) => {
-  var manager = await getManager()
-  const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
+const confirmTx = async (_id, _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
+  var manager = await getManagerWP(_PRIVATE_KEY)
+  const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
   var web3 = new Web3(endpoint)
   var contract = new web3.eth.Contract(multiSig, _multiSigWalletAddress)
   const tx = {
@@ -51,15 +48,15 @@ const confirmTx = async (_id, _multiSigWalletAddress) => {
     value: 0,
     data: contract.methods.confirmTransaction(_id).encodeABI() 
   }
-  const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+  const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
   const signed = signPromise.rawTransaction
   const sentTx = await web3.eth.sendSignedTransaction(signed)
   return sentTx
 }
 
-const executeTx = async (_id, _multiSigWalletAddress) => {
-  var manager = await getManager()
-  const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
+const executeTx = async (_id, _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
+  var manager = await getManagerWP(_PRIVATE_KEY)
+  const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
   var web3 = new Web3(endpoint)
   var contract = new web3.eth.Contract(multiSig, _multiSigWalletAddress)
   const tx = {
@@ -69,17 +66,17 @@ const executeTx = async (_id, _multiSigWalletAddress) => {
     value: 0,
     data: contract.methods.executeTransaction(_id).encodeABI() 
   }
-  const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+  const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
   const signed = signPromise.rawTransaction
   const sentTx = await web3.eth.sendSignedTransaction(signed)
   return sentTx
 }
 
-var beginSetupMSW = async (_name, _multiSigWalletAddress) => {
+var beginSetupMSW = async (_name, _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
   try {
     const fundName = _name
-    var manager = await getManager()
-    const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
     var web3 = new Web3(endpoint)
 
     var mSigContract = new web3.eth.Contract(multiSig, _multiSigWalletAddress)
@@ -149,7 +146,7 @@ var beginSetupMSW = async (_name, _multiSigWalletAddress) => {
     }
 
     //sign and send TX
-    const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
     const signed = signPromise.rawTransaction
     const sentTx = await web3.eth.sendSignedTransaction(signed)
     return true
@@ -159,10 +156,10 @@ var beginSetupMSW = async (_name, _multiSigWalletAddress) => {
   }
 }
 
-var completeSetupMSW = async (_multiSigWalletAddress) => {
+var completeSetupMSW = async (_multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
   try {
-    var manager = await getManager()
-    const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
     var web3 = new Web3(endpoint)
 
     var mSigContract = new web3.eth.Contract(multiSig, _multiSigWalletAddress)
@@ -177,7 +174,7 @@ var completeSetupMSW = async (_multiSigWalletAddress) => {
       value: val * 8,
       data: 0x0
     }
-    const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
     const signed = signPromise.rawTransaction
     const sentTx = await web3.eth.sendSignedTransaction(signed)
     //generate abi data
@@ -200,7 +197,7 @@ var completeSetupMSW = async (_multiSigWalletAddress) => {
         data: await mSigContract.methods.submitTransaction(manager.deployment.melonContracts.version, val, inputData[i]).encodeABI()
       }
       //sign and send TX
-      const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+      const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
       const signed = signPromise.rawTransaction
       const sentTx = await web3.eth.sendSignedTransaction(signed)
     }
@@ -216,10 +213,10 @@ var { Exchanges, Contracts } = require('@melonproject/protocol/lib/Contracts')
 var { FunctionSignatures } = require('@melonproject/protocol/lib/contracts/fund/trading/utils/FunctionSignatures')
 var { emptyAddress } = require('@melonproject/protocol/lib/utils/constants/emptyAddress')
 
-var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress) => {
+var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
   try {
-    var manager = await getManager()
-    const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
     var web3 = new Web3(endpoint)
 
     var routes = await Protocol.managersToRoutes(manager, manager.deployment.melonContracts.version, _multiSigWalletAddress)
@@ -269,7 +266,7 @@ var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress
         data: await mSigContract.methods.submitTransaction(routes.trading, 0, inputData).encodeABI()
       }
       //sign and send TX
-      const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+      const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
       const signed = signPromise.rawTransaction
       const sentTx = await web3.eth.sendSignedTransaction(signed)
       return true
@@ -279,10 +276,10 @@ var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress
     }
   }
 
-  var takeOrderMSW = async (_orderID, _multiSigWalletAddress) => {
+  var takeOrderMSW = async (_orderID, _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
     try {
-      var manager = await getManager()
-      const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
+      var manager = await getManagerWP(_PRIVATE_KEY)
+      const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
       var web3 = new Web3(endpoint)
 
       var routes = await Protocol.managersToRoutes(manager, manager.deployment.melonContracts.version, _multiSigWalletAddress)
@@ -328,7 +325,7 @@ var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress
       data: await mSigContract.methods.submitTransaction(routes.trading, 0, inputData).encodeABI()
     }
     //sign and send TX
-    const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
     const signed = signPromise.rawTransaction
     const sentTx = await web3.eth.sendSignedTransaction(signed)
     return true
@@ -338,10 +335,10 @@ var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress
   }
 }
 
-  var cancelOrderMSW = async (_orderID, _multiSigWalletAddress) => {
+  var cancelOrderMSW = async (_orderID, _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
     try {
-      var manager = await getManager()
-      const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
+      var manager = await getManagerWP(_PRIVATE_KEY)
+      const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
       var web3 = new Web3(endpoint)
 
       var routes = await Protocol.managersToRoutes(manager, manager.deployment.melonContracts.version, _multiSigWalletAddress)
@@ -378,7 +375,7 @@ var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress
       data: await mSigContract.methods.submitTransaction(routes.trading, 0, inputData).encodeABI()
     }
     //sign and send TX
-    const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
     const signed = signPromise.rawTransaction
     const sentTx = await web3.eth.sendSignedTransaction(signed)
     return true
@@ -388,10 +385,10 @@ var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress
   }
 }
 
-var returnAssetToVaultMSW = async (_assetAddress, _multiSigWalletAddress) => {
+var returnAssetToVaultMSW = async (_assetAddress, _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
   try {
-    var manager = await getManager()
-    const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
     var web3 = new Web3(endpoint)
 
     var routes = await Protocol.managersToRoutes(manager, manager.deployment.melonContracts.version, _multiSigWalletAddress)
@@ -407,15 +404,16 @@ var returnAssetToVaultMSW = async (_assetAddress, _multiSigWalletAddress) => {
       data: await mSigContract.methods.submitTransaction(routes.trading, 0, inputData).encodeABI()
     }
     //sign and send TX
-    const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
     const signed = signPromise.rawTransaction
     const sentTx = await web3.eth.sendSignedTransaction(signed)
     return true
   }
   catch (e) {
-    console.log('takeOrderMSW failed: ' + e)
+    console.log('returnAssetToVaultMSW failed: ' + e)
   }
 }
+
 module.exports = {
 	multiSigAddOwner,
   confirmTx,

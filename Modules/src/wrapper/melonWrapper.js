@@ -19,14 +19,15 @@ const { createQuantity, appendDecimals, toBI } = require('@melonproject/token-ma
 var exchangeAggregate = require('@melonproject/exchange-aggregator')
 
 const {
-  INFURA_KEY
+  INFURA_KEY,
+  PRIVATE_KEYsrc
 } = require('../../.env')
 
 const ENDPOINT = 'https://kovan.infura.io/v3/' + INFURA_KEY
 
 
 var getEnvironment = () => constructEnvironment({endpoint: ENDPOINT, track: 'kyberPrice', deployment: DEPLOYMENT})
-var getManager = async () => await withPrivateKeySigner(await getEnvironment(), process.env.PRIVATE_KEY)
+var getManager = async () => await withPrivateKeySigner(await getEnvironment(), PRIVATE_KEYsrc)
 var getManagerWP = async (_privateKey) => await withPrivateKeySigner(await getEnvironment(), _privateKey)
 var getManagerOf = async (_address) => {
   try {
@@ -85,7 +86,7 @@ var getHoldingsOf = async (fundManagerAddress) => {
 
 var getRate = async (holding) => {
   try {
-    const endpoint = 'https://mainnet.infura.io/v3/' + process.env.INFURA_KEY;
+    const endpoint = 'https://mainnet.infura.io/v3/' + INFURA_KEY;
     var web3 = new Web3(endpoint)
     var contract = new web3.eth.Contract(ConversionRatesAbi, '0x798AbDA6Cc246D0EDbA912092A2a3dBd3d11191B')
     var getBlockNumber = await web3.eth.getBlockNumber()
@@ -104,7 +105,7 @@ var getRate = async (holding) => {
 
 var getBalance = async (address) => {
   try {
-    const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY;
+    const endpoint = 'https://kovan.infura.io/v3/' + INFURA_KEY;
     var web3 = new Web3(endpoint)
     var balance = await web3.eth.getBalance(address) / Math.pow(10, 18)
     return balance
@@ -130,7 +131,7 @@ var calculateAUM = async (holdings) => {
 
 var calculateAUMof = async (asset) => {
   try {
-    const endpoint = 'https://mainnet.infura.io/v3/' + process.env.INFURA_KEY;
+    const endpoint = 'https://mainnet.infura.io/v3/' + INFURA_KEY;
     var web3 = new Web3(endpoint)
     var contract = new web3.eth.Contract(ConversionRatesAbi, '0x798AbDA6Cc246D0EDbA912092A2a3dBd3d11191B')
     var getBlockNumber = await web3.eth.getBlockNumber()
@@ -328,7 +329,7 @@ var setupInvestedFund2 = async(_fundname) => {
   try {
     const fundName = _fundname
     var manager = await getManager();
-    const endpoint = 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY;
+    const endpoint = 'https://kovan.infura.io/v3/' + INFURA_KEY;
     var web3 = new Web3(endpoint)
     var balance = await getBalance(manager.wallet.address);
     if (balance < 1.3) {
@@ -401,7 +402,7 @@ var setupInvestedFund2 = async(_fundname) => {
     }
 
     //sign and send TX
-    const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+    const signPromise = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEYsrc)
     const signed = signPromise.rawTransaction
     const sentTx = await web3.eth.sendSignedTransaction(signed)
     //#########################################################################
@@ -425,7 +426,7 @@ var setupInvestedFund2 = async(_fundname) => {
       }
 
       //sign and send TX
-      const signPromise = await web3.eth.accounts.signTransaction(tx, process.env.PRIVATE_KEY)
+      const signPromise = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEYsrc)
       const signed = signPromise.rawTransaction
       const sentTx = await web3.eth.sendSignedTransaction(signed)
     }

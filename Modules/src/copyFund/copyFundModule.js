@@ -1,20 +1,22 @@
 const Web3 = require('web3')
 var getTokenByAddress = require('@melonproject/protocol/lib/utils/environment/getTokenByAddress').getTokenByAddress
+const tradingABI = require('@melonproject/protocol/out/Trading.abi.json')
 
 const melonWrapper = '../wrapper/melonWrapper'
 var getHoldingsOf = require(melonWrapper).getHoldingsOf
 var getHoldings = require(melonWrapper).getHoldings
-var getManager = require(melonWrapper).getManager
+var getRoutesOf = require(melonWrapper).getRoutesOf
+var getManagerWP = require(melonWrapper).getManagerWP
 var calculateAUMwithoutWETH = require(melonWrapper).calculateAUMwithoutWETH
 var calculateAUMof = require(melonWrapper).calculateAUMof
 var getRate = require(melonWrapper).getRate
-var makeOrder = require(melonWrapper).makeOrder
+var makeOrderWP = require(melonWrapper).makeOrderWP
 
-const copyFundsLoggerABI = require('./contracts/copyFundsLoggerABI.abi.js')
+const copyFundsLoggerABI = require('./contracts/copyFundsLogger.abi.js')
 
 var logFund = async (_fundAddress, _amount, _assets, _values, _INFURA_KEY, _PRIVATE_KEY) => {
   try {
-    var manager = await getManager();
+    var manager = await getManagerWP(_PRIVATE_KEY);
     const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY;
     var web3 = new Web3(endpoint)
     var contract = new web3.eth.Contract(copyFundsLoggerABI, '0xac004a6655c5fa2289bb8a15e4f02baa3afe5905')
@@ -40,7 +42,7 @@ var logFund = async (_fundAddress, _amount, _assets, _values, _INFURA_KEY, _PRIV
 
 var logFund = async (_fundAddress, _amount, _INFURA_KEY, _PRIVATE_KEY) => {
   try {
-    var manager = await getManager();
+    var manager = await getManagerWP(_PRIVATE_KEY);
     const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY;
     var web3 = new Web3(endpoint)
     var contract = new web3.eth.Contract(copyFundsLoggerABI, '0xac004a6655c5fa2289bb8a15e4f02baa3afe5905')
@@ -73,9 +75,9 @@ var logFund = async (_fundAddress, _amount, _INFURA_KEY, _PRIVATE_KEY) => {
   }
 }
 
-var getLoggedFund = async (_fundAddress, _INFURA_KEY) => {
+var getLoggedFund = async (_fundAddress, _INFURA_KEY, _PRIVATE_KEY) => {
   try {
-    var manager = await getManager()
+    var manager = await getManagerWP(_PRIVATE_KEY)
     const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY;
     var web3 = new Web3(endpoint)
     var contract = new web3.eth.Contract(copyFundsLoggerABI, '0xac004a6655c5fa2289bb8a15e4f02baa3afe5905')
@@ -91,7 +93,7 @@ var getLoggedFund = async (_fundAddress, _INFURA_KEY) => {
 
 var unlogFund = async (_fundAddress, _INFURA_KEY, _PRIVATE_KEY) => {
   try {
-    var manager = await getManager();
+    var manager = await getManagerWP(_PRIVATE_KEY);
     const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY;
     var web3 = new Web3(endpoint)
     var contract = new web3.eth.Contract(copyFundsLoggerABI, '0xac004a6655c5fa2289bb8a15e4f02baa3afe5905')
@@ -128,7 +130,7 @@ var copyFund = async (_fundAddress, _investAmount, _INFURA_KEY, _PRIVATE_KEY) =>
       }
     }
 
-    //makeOrders to copy the given fund and the calculations needed before.
+    //makeOrderWPs to copy the given fund and the calculations needed before.
     const aum = await calculateAUMwithoutWETH(holdingsOf)    
     var assets = []
     var values = []
@@ -146,7 +148,8 @@ var copyFund = async (_fundAddress, _investAmount, _INFURA_KEY, _PRIVATE_KEY) =>
 
         //Check if the _investAmount of the given tradingPair is big enough to suceed.
         if (valueWETH > Math.pow(10,-15)) {
-          console.log(await makeOrder(
+          console.log(await makeOrderWP(
+            _PRIVATE_KEY,
             holdings[holding].token.symbol,
             valueWETH,
             valueToken,
@@ -162,7 +165,7 @@ var copyFund = async (_fundAddress, _investAmount, _INFURA_KEY, _PRIVATE_KEY) =>
     await logFund(_fundAddress, _investAmount, assets, values, _INFURA_KEY, _PRIVATE_KEY)
     return {
       action: 'BUY',
-      actionFund: await getManager().address,
+      actionFund: await getManagerWP(_PRIVATE_KEY).address,
       sourceFund: _fundAddress,
       assets: assets,
       values: values
@@ -173,7 +176,7 @@ var copyFund = async (_fundAddress, _investAmount, _INFURA_KEY, _PRIVATE_KEY) =>
 }
 
 var sellCopiedFund = async (_fundAddress, _INFURA_KEY, _PRIVATE_KEY) => {
-  var manager = await getManager()
+  var manager = await getManagerWP(_PRIVATE_KEY)
   var prepare = await getLoggedFund(_fundAddress, _INFURA_KEY)
     var fund = {
       manager: prepare[0],
@@ -186,7 +189,8 @@ var sellCopiedFund = async (_fundAddress, _INFURA_KEY, _PRIVATE_KEY) => {
       var rate = await getRate(holding)
       var valueWETH = rate * (fund.values[asset] / Math.pow(10,18))
       var valueToken = (fund.values[asset] / Math.pow(10,18))
-      console.log(await makeOrder(
+      console.log(await makeOrderWP(
+        _PRIVATE_KEY,
             holding.token.symbol,
             valueWETH,
             valueToken,
@@ -205,10 +209,39 @@ var sellCopiedFund = async (_fundAddress, _INFURA_KEY, _PRIVATE_KEY) => {
     }
 }
 
+var returnAssetToVault = async (_assetAddress, _INFURA_KEY, _PRIVATE_KEY) => {
+  try {
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
+    var web3 = new Web3(endpoint)
+
+    var routes = await getRoutesOf(manager.wallet.address)
+    var tradingContract = new web3.eth.Contract(tradingABI, routes.trading)
+    const inputData = await tradingContract.methods.returnAssetToVault(_assetAddress.toString()).encodeABI()
+    
+    const tx = {
+      from: manager.wallet.address, 
+      to: routes.trading,
+      gas: 1000000,
+      value: 0,
+      data: inputData
+    }
+    //sign and send TX
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
+    const signed = signPromise.rawTransaction
+    const sentTx = await web3.eth.sendSignedTransaction(signed)
+    return sentTx
+  }
+  catch (e) {
+    console.log('returnAssetToVault failed: ' + e)
+  }
+}
+
 module.exports = {
   logFund,
   getLoggedFund,
   unlogFund,
   copyFund,
-  sellCopiedFund
+  sellCopiedFund,
+  returnAssetToVault
 }

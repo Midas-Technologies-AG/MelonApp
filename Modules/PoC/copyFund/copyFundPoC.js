@@ -1,14 +1,16 @@
 var mlnWrapper = '../../src/wrapper/melonWrapper'
 var getRate = require(mlnWrapper).getRate
+var getRoutesOf = require(mlnWrapper).getRoutesOf
 var getManagerWP = require(mlnWrapper).getManagerWP
 var getHoldingsWP = require(mlnWrapper).getHoldingsWP
 var makeOrderWP = require(mlnWrapper).makeOrderWP
 var takeOrderWP = require(mlnWrapper).takeOrderWP
 
-var CFmodule = '../../src/copyFunds/copyFundsModule'
-var getLoggedFund = require(mlnWrapper).getLoggedFund
-var logFund = require(mlnWrapper).logFund
-var unlogFund = require(mlnWrapper).unlogFund
+var CFmodule = '../../src/copyFund/copyFundModule'
+var getLoggedFund = require(CFmodule).getLoggedFund
+var logFund = require(CFmodule).logFund
+var unlogFund = require(CFmodule).unlogFund
+var returnAssetToVault = require(CFmodule).returnAssetToVault
 
 //environment needed!
 const {
@@ -27,11 +29,11 @@ var copyFundPoC = async (_INFURA_KEY, _PRIVATE_KEYsrc, _PRIVATE_KEYdest) => {
         for (var holding in holdingsOf) {
             var order
             //(WETH and) MLN arent tradeable on oasisdex for now
-            if (holdingsOf[holding].token.symbol == 'ZRX' ||
-                holdingsOf[holding].token.symbol == 'BAT') {
+            if (holdingsOf[holding].token.symbol == 'ZRX' /*||
+                holdingsOf[holding].token.symbol == 'BAT'*/) {
                 var valueToken = 10
-            var valueWETH = valueToken * await getRate(holdingsOf[holding])
-            console.log(valueWETH)
+                 var valueWETH = valueToken * await getRate(holdingsOf[holding])
+                console.log(valueWETH)
                 //PoC makeOrder by srcFund
                 order = await makeOrderWP(
                     _PRIVATE_KEYsrc,
@@ -110,14 +112,14 @@ const test = async () => {
     console.log('#####################ENVIRONMENT SETTINGS#########################')
     var srcManager = await getManagerWP(PRIVATE_KEYsrc)
     console.log('Loaded srcManager: ' + srcManager.wallet.address)
-    console.log(' Fund Holdings of srcManager: ')
-    console.log(await getHoldingsWP(PRIVATE_KEYsrc))
+    //console.log(' Fund Holdings of srcManager: ')
+    //console.log(await getHoldingsWP(PRIVATE_KEYsrc))
     var destManager = await getManagerWP(PRIVATE_KEYdest)
     console.log('Loaded destManager: ' + destManager.wallet.address)
-    console.log(' Fund Holdings of destManager: ')
-    console.log(await getHoldingsWP(PRIVATE_KEYdest))
+    //console.log(' Fund Holdings of destManager: ')
+    //console.log(await getHoldingsWP(PRIVATE_KEYdest))
     console.log('########################COPY FUND##################################')
-    //console.log(await copyFundPoC(INFURA_KEY, PRIVATE_KEYsrc, PRIVATE_KEYdest))
+    console.log(await copyFundPoC(INFURA_KEY, PRIVATE_KEYsrc, PRIVATE_KEYdest))
     console.log('######################GET LOGGED FUND##############################')
     //console.log(await getLoggedFund(destManager.wallet.address, INFURA_KEY))
     console.log('######################SELL COPIED FUND##############################')
@@ -126,3 +128,10 @@ const test = async () => {
     //console.log(await getLoggedFund('0x88D855BdF87b93B956154714109d9a5A22A6AD9B', INFURA_KEY))
 }
 test()
+
+const test2 = async () => {
+    var srcManager = await getManagerWP(PRIVATE_KEYsrc)
+    //console.log(await getRoutesOf(srcManager.wallet.address))
+    console.log(await returnAssetToVault('0xd0A1E359811322d97991E03f863a0C30C2cF029C', INFURA_KEY, PRIVATE_KEYsrc))
+}
+//test2()
