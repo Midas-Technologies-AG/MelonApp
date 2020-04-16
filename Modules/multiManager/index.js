@@ -12,7 +12,7 @@ var cancelOrderMSW = require(multiManagerModule).cancelOrderMSW
 var returnAssetToVaultMSW = require(multiManagerModule).returnAssetToVaultMSW
 
 module.exports = {
-	multiSigAddOwner,
+  multiSigAddOwner,
   confirmTx,
   executeTx,
   beginSetupMSW,
