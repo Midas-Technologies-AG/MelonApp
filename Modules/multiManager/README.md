@@ -25,9 +25,16 @@ module.exports = {
 
 ## Available fucntions
 
-makeOrderMSW
-takeOrderMSW
-cancelOrderMSW
-...
+  addOwnerMSW,
+  confirmMSW,
+  executeMSW,
+  beginSetupMSW,
+  completeSetupMSW,
+  makeOrderMSW,
+  takeOrderMSW,
+  cancelOrderMSW,
+  returnAssetToVaultMSW
+  
+Check the inputs at `multiManager/MMmodule/multiManagerModule.js`.
 
-Checkout `runPoC.js` or run `node runPoC`
+Checkout `runPoC.js` or run `node runPoC` for testing if everything is set up well.
