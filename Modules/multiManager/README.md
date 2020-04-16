@@ -1,4 +1,4 @@
-# README
+# multiManager Module
 
 This module uses MultiSignatureWallet from https://wallet.gnosis.pm/
 
