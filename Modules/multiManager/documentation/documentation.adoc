@@ -12,7 +12,7 @@ First of all you need:
 
 1. one invested fund (1 WETH)
 2. one multiSigWallet (min. 2 Owner)
-3. one invested fund wit multiManager
+3. one invested fund with multiManager
 
 === 1. invested fund
 
@@ -36,14 +36,66 @@ Create a new MultiSig Wallet:
 
 Then copy the address of your wallet and add it to the `.env.js`-file.
 
-[pic22.png]
+[pic2.png]
 
 
 === 3. create MSWfund
 
+Now you can run the same command as above, but with the file from here https://github.com/Midas-Technologies-AG/MelonApp/blob/1b07c21c16e9b598eb4c79866a900baf6e1e7199/Modules/multiManager/runPoC.js which basically executes those two funcions:
+
+[pic3.png]
+
+NOTE: Now you need to go to the multiSig wallet https://wallet.gnosis.pm/ and confirm first the beginSetup() function as well as wait until it is successfully executed before you confirm the second one. Otherwise the second fails and need to be executed again and so on.
+
+IMPORTANT: change the gas while confirming with the second account
+
+So you should see 9 tx like in this picture:
+[pic4.png]
+
+Add a 4 in front of "Gas Limit":
+[pic5.png]
 
 
+.Gas Costs
+1. 2,703,244 (https://kovan.etherscan.io/tx/0x0856bd39106cd96e5058b6244665689bc8e354fcd2990c3c699326be78b339cf)
+2. 2,187,327
+3. 1,540,364
+4. 3,682,303
+5. 1,260,900
+6. 1,262,465
+7. 4,057,974
+8. 973,420
+9. 3,118,282 (https://kovan.etherscan.io/tx/0xbd4cfedaa5e6776849f0a0efd5eede1b76c1402fd2f15550776390b87d39c3fe)
 
+Now you can run `console.log(await getRoutesOf(mswAddress))` and it will work fine.
+
+Example:
+
+```
+$ /MelonApp/Modules$ node multiManager/runPoC.js
+
+Result {
+  accounting: '0x256d8D56daE86185e1df8B6C8A243EdDdF7B9fEb',
+  feeManager: '0x96FE31D8D74584c4e880dee29F9506f92A1A7ae2',
+  participation: '0x8107AcC2aB89d8A1547A7270dE65e419000F7E5b',
+  policyManager: '0xed65e9dE085892FfDBF1a323a4C5d4fae520f2f7',
+  shares: '0xfA6910D269FE933F74E68c6D90881dAC820Aa420',
+  trading: '0x401Ed3A28B75b7BC3963F2a936754173c75Df41e',
+  vault: '0xCfF1bC99258b1f20e21762e132CDAce116B46B11',
+  priceSource: '0x385a59e848f6456ADf19C367c8cf03FD39c23FAB',
+  registry: '0xb8ACdbE95e9980fae93716ebA27709BCF1765A12',
+  version: '0x160386e65C129C43AdA6496ED0ec2Ec63040f0Bc',
+  engine: '0x8fe493CaF7Eedb3cC32aC4194ee41cBa9470e984',
+  mlnToken: '0x2C2edf394638931eb672BD9261d2AA1934874d45'
+}
+```
+
+
+=== invest in MSWfund
+
+We gonna invest from our baseAddress, because it is not possible yet to invest via a MSWwallet. Needs to be developed first.
+
+Before you run the same command as before send via metamask to '0xd0A1E359811322d97991E03f863a0C30C2cF029C' 1 Ether. This is the WETH contract and by default it will deposit you 1 WETH. After successfull confirmation use these commands/this file:
 
 
 == Proof of Concept

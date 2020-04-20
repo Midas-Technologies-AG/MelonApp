@@ -59,13 +59,13 @@ const runPoC = async () => {
 		//now you need to create a msw on https://wallet.gnosis.pm/
 
 		//############## CREATE MSW FUND SETUP ###########################
-		console.log(await beginSetupMSW('multiManager', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		//console.log(await beginSetupMSW('multiManager', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//TODO confirm and execute via MSW! NEEDS 3 000 000 GAS !!!!
-		console.log(await completeSetupMSW(mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		//console.log(await completeSetupMSW(mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//TODO confirm and execute via MSW! NEEDS 4 100 000 GAS !!!!
-		//console.log(await getRoutesOf(mswAddress))
-		//console.log(await investInFund(mswAddress))
-		//console.log(await getHoldingsOf(mswAddress))
+		console.log(await getRoutesOf(mswAddress))
+		console.log(await investInFund(mswAddress))
+		console.log(await getHoldingsOf(mswAddress))
 
 		//############## CREATE MSW MAKEORDER ############################
 		//console.log(await makeOrderMSW('BAT', 25 * Math.pow(10, 18), 'BUY', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
