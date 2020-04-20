@@ -1,6 +1,0 @@
-var ...
-
-
-module.exports = {
-
-}

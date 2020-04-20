@@ -2,13 +2,13 @@
 
 This Repository contains the modules `copyFunds` and `multiManager` for the `@melonproject/protocol` proposing a Proof of Concept for both modules.
 
-For the specific module specification checkout the `README.md` in `./copyFunds` or `./multiManager`.
 
 ## installation
 
 To install the dependencies run `npm install` or `yarn install`.
 
 If you come through go to one of the modules and checkout, what you need to do to be able to test, or open up an issue in this repository or visit the A$H team telegram channel via https://ash.finance
+
 
 ### known errorhandling
 
@@ -24,8 +24,13 @@ To fix `...Error: Cannot find module './build/Release/scrypt'...` change `node_m
 - define functions for `Modules/index.js`
 - define and implement tests in `test.js`
 
+
 ### copyFunds
+
 - research/implement/test copyFundsFunction with timer for exchange freeze after makeOrder
 
+
 ### multiManager
+
 - implement function to create gnosis MSW (multisignaturewallet)
+

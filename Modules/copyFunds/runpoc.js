@@ -1,4 +1,4 @@
-var mlnWrapper = '../../src/wrapper/melonWrapper'
+var mlnWrapper = '../wrapper/melonWrapper'
 var getRate = require(mlnWrapper).getRate
 var getRoutesOf = require(mlnWrapper).getRoutesOf
 var getManagerWP = require(mlnWrapper).getManagerWP
@@ -7,7 +7,7 @@ var makeOrderWP = require(mlnWrapper).makeOrderWP
 var takeOrderWP = require(mlnWrapper).takeOrderWP
 var getOrders = require(mlnWrapper).getOrders
 
-var CFmodule = '../../src/copyFund/copyFundModule'
+var CFmodule = './CFmodule/copyFundModule'
 var getLoggedFund = require(CFmodule).getLoggedFund
 var logFund = require(CFmodule).logFund
 var unlogFund = require(CFmodule).unlogFund
