@@ -17,3 +17,15 @@ To fix `...Error: Cannot find module './build/Release/scrypt'...` change `node_m
 `...Error: Cannot find module '../out/Accounting.abi.json'...` can be fixed by copying `node_modules/@melonproject/protocol/out/` to `node_modules/@melonproject/exchange-aggregator/node_modules/@melonproject/protocol/`. This is an error from the dependency exchange-aggregator.
 
 
+## possible ToDo's
+
+### general
+
+- define functions for `Modules/index.js`
+- define and implement tests in `test.js`
+
+### copyFunds
+- research/implement/test copyFundsFunction with timer for exchange freeze after makeOrder
+
+### multiManager
+- implement function to create gnosis MSW (multisignaturewallet)
