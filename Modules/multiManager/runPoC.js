@@ -53,15 +53,15 @@ const {
 const runPoC = async () => {
 	try {
 		////############## create enviroment############################
-		var manager = await getManager()
-		var fund = await setupInvestedFund2('MMbase')
-		console.log(fund)
+		//var manager = await getManager()
+		//var fund = await setupInvestedFund2('MMbase')
+		//console.log(fund)
 		//now you need to create a msw on https://wallet.gnosis.pm/
 
 		//############## CREATE MSW FUND SETUP ###########################
-		//console.log(await beginSetupMSW('multiManager', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		console.log(await beginSetupMSW('multiManager', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//TODO confirm and execute via MSW! NEEDS 3 000 000 GAS !!!!
-		//console.log(await completeSetupMSW(mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		console.log(await completeSetupMSW(mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//TODO confirm and execute via MSW! NEEDS 4 100 000 GAS !!!!
 		//console.log(await getRoutesOf(mswAddress))
 		//console.log(await investInFund(mswAddress))

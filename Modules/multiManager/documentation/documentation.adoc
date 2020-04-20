@@ -4,7 +4,9 @@ This module aims to enable multiple persons to manage a fund on the `@melonproje
 
 == preliminaries
 
-Use metamask browser extension (https://metamask.io/) as wallet and use https://faucet.kovan.network/ to get some kovan TESTNETether. There you also can export the PRIVATE_KEYs to integrate in the `.env.js` file.
+Use metamask browser extension (https://metamask.io/) as wallet. There you also can export the PRIVATE_KEYs to integrate in the `.env.js` file. To get some kovan TESTNETether visit https://faucet.kovan.network/. In general the whole setup from scratch should work fine with `3 Ether`.
+
+If the pricefeed is down, errormsg like here https://kovan.etherscan.io/tx/0x2c6e7789e3faeb6d7ed7b3b0732bf3965d47a035d5dd32e6b8272283e60a9266 then contact Midas Technologies AG or hello@laubenheimer.eu
 
 First of all you need:
 
@@ -14,7 +16,30 @@ First of all you need:
 
 === 1. invested fund
 
-To invest into a fund you need the `PRIVATE_KEYsrc` variable set with a minimum balance of 3 ETH (approx. 1.5 ETH per fund).
+To invest into a fund you need the `PRIVATE_KEYsrc` variable set with a minimum balance of 1.5 ETH.
+
+Basically you can run `node runPoC` with the file like here https://github.com/Midas-Technologies-AG/MelonApp/blob/ad65b3c7e3df1f73cc0dbf27c8848efa78f2dc9c/Modules/multiManager/runPoC.js
+
+It is just using `setupInvestedFund2` from the `melonWrapper`.
+
+[pic1.png]
+
+=== 2. multiSigWallet
+
+Visit https://wallet.gnosis.pm/ and login/connect to MetaMask.
+
+Create a new MultiSig Wallet:
+1. give it a name
+2. set confirmations two min 2
+3. add min one owner
+4. deploy and confirm tx via MetaMask
+
+Then copy the address of your wallet and add it to the `.env.js`-file.
+
+[pic22.png]
+
+
+=== 3. create MSWfund
 
 
 
