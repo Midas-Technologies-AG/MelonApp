@@ -1,3 +1,7 @@
+// Willie Laubenheimer, hello@laubenheimer.eu
+// Midas Technologies AG
+
+//dependencies
 const Web3 = require('web3')
 const getTokenAddress = require('./getTokenAddress')
 const ConversionRatesAbi = require('./ConversionRates.abi')

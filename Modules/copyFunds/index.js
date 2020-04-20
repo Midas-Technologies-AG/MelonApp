@@ -1,3 +1,7 @@
+// Willie Laubenheimer, hello@laubenheimer.eu
+// Midas Technologies AG
+
+//required functions
 var CFmodule = './CFmodule/copyFundModule'
 var copyFund = require(CFmodule).copyFund
 var sellCopiedFund = require(CFmodule).sellCopiedFund

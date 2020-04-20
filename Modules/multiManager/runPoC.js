@@ -14,7 +14,7 @@ const Web3 = require('web3')
 var Protocol = require('@melonproject/protocol')
 const { appendDecimals } = require('@melonproject/token-math')
 
-var mlnWrapper = './src/wrapper/melonWrapper'
+var mlnWrapper = '../wrapper/melonWrapper'
 var getManager = require(mlnWrapper).getManager
 var getHoldings = require(mlnWrapper).getHoldings
 var getHoldingsOf = require(mlnWrapper).getHoldingsOf
@@ -28,21 +28,22 @@ var takeOrder = require(mlnWrapper).takeOrder
 var getBalance = require(mlnWrapper).getBalance
 var getRate = require(mlnWrapper).getRate
 
-const tokenABI = require('./src/wrapper/erc20Contract.abi.js')
+const tokenABI = require('../wrapper/erc20Contract.abi.js')
 
-const multiManagerModule = './src/multiManager/multiManagerModule'
+const multiManagerModule = '../multiManager/MMmodule/multiManagerModule'
 var multiSigAddOwner = require(multiManagerModule).multiSigAddOwner
 var confirmTx = require(multiManagerModule).confirmTx
 var executeTx = require(multiManagerModule).executeTx
 
 var beginSetupMSW = require(multiManagerModule).beginSetupMSW
 var completeSetupMSW = require(multiManagerModule).completeSetupMSW
+
 var makeOrderMSW = require(multiManagerModule).makeOrderMSW
 var takeOrderMSW = require(multiManagerModule).takeOrderMSW
 var cancelOrderMSW = require(multiManagerModule).cancelOrderMSW
 
 //########################
-const test = async () => {
+const runPoC = async () => {
 	try {
 		var manager = await getManager()
 		const MSWaddress = '0xd0b4ad9EaD5918ed4CDe1D175ccD04F2eFd37ddD'
@@ -89,7 +90,7 @@ const test = async () => {
 	}
 }
 //########################
-test()
+runPoC()
 
 /*
 first MSW with fund 0xd0b4ad9EaD5918ed4CDe1D175ccD04F2eFd37ddD

@@ -1,3 +1,7 @@
+// Willie Laubenheimer, hello@laubenheimer.eu
+// Midas Technologies AG
+
+//dependencies
 const Web3 = require('web3')
 var Protocol = require('@melonproject/protocol')
 const { createQuantity, appendDecimals, toBI } = require('@melonproject/token-math')
@@ -5,10 +9,10 @@ const stringToBytes32 = require("@melonproject/protocol/lib/utils/helpers/string
 const fundFactory = require('@melonproject/protocol/out/FundFactory.abi.json')
 const tradingABI = require('@melonproject/protocol/out/Trading.abi.json')
 
-var getManagerWP = require('../wrapper/melonWrapper').getManagerWP
-var getRate = require('../wrapper/melonWrapper').getRate
-var getRoutesOf = require('../wrapper/melonWrapper').getRoutesOf
-const tokenABI = require('../wrapper/erc20Contract.abi.js')
+var getManagerWP = require('../../wrapper/melonWrapper').getManagerWP
+var getRate = require('../../wrapper/melonWrapper').getRate
+var getRoutesOf = require('../../wrapper/melonWrapper').getRoutesOf
+const tokenABI = require('../../wrapper/erc20Contract.abi.js')
 
 const multiSig = require('./contracts/multiSig.abi.js')
 
@@ -415,7 +419,7 @@ var returnAssetToVaultMSW = async (_assetAddress, _multiSigWalletAddress, _INFUR
 }
 
 module.exports = {
-	multiSigAddOwner,
+  multiSigAddOwner,
   confirmTx,
   executeTx,
   beginSetupMSW,

@@ -1,3 +1,7 @@
+// Willie Laubenheimer, hello@laubenheimer.eu
+// Midas Technologies AG
+
+//dependencies
 var mlnWrapper = '../wrapper/melonWrapper'
 var getRate = require(mlnWrapper).getRate
 var getRoutesOf = require(mlnWrapper).getRoutesOf
@@ -19,7 +23,7 @@ const {
     INFURA_KEY,
     PRIVATE_KEYsrc,
     PRIVATE_KEYdest
-} = require('../../.env.js')
+} = require('../.env.js')
 
 //########################
 var copyFundPoC = async (_INFURA_KEY, _PRIVATE_KEYsrc, _PRIVATE_KEYdest) => {
@@ -110,28 +114,28 @@ var sellCopiedFundPoC = async (_fundAddress, _INFURA_KEY, _PRIVATE_KEYsrc, _PRIV
     }
 }
 //########################
-const test = async () => {
+const runPoC = async () => {
     console.log('#####################ENVIRONMENT SETTINGS#########################')
     var srcManager = await getManagerWP(PRIVATE_KEYsrc)
     console.log('Loaded srcManager: ' + srcManager.wallet.address)
-    //console.log(' Fund Holdings of srcManager: ')
-    //console.log(await getHoldingsWP(PRIVATE_KEYsrc))
+    console.log(' Fund Holdings of srcManager: ')
+    console.log(await getHoldingsWP(PRIVATE_KEYsrc))
     var destManager = await getManagerWP(PRIVATE_KEYdest)
     console.log('Loaded destManager: ' + destManager.wallet.address)
-    //console.log(' Fund Holdings of destManager: ')
-    //console.log(await getHoldingsWP(PRIVATE_KEYdest))
+    console.log(' Fund Holdings of destManager: ')
+    console.log(await getHoldingsWP(PRIVATE_KEYdest))
     console.log('########################COPY FUND##################################')
     console.log(await copyFundPoC(INFURA_KEY, PRIVATE_KEYsrc, PRIVATE_KEYdest))
     console.log('######################GET LOGGED FUND##############################')
-    //console.log(await getLoggedFund(destManager.wallet.address, INFURA_KEY))
+    console.log(await getLoggedFund(destManager.wallet.address, INFURA_KEY))
     console.log('######################SELL COPIED FUND##############################')
-    //console.log(await sellCopiedFundPoC('0x88D855BdF87b93B956154714109d9a5A22A6AD9B'))
+    console.log(await sellCopiedFundPoC('0x88D855BdF87b93B956154714109d9a5A22A6AD9B'))
     console.log('######################GET LOGGED FUND##############################')
-    //console.log(await getLoggedFund('0x88D855BdF87b93B956154714109d9a5A22A6AD9B', INFURA_KEY))
+    console.log(await getLoggedFund('0x88D855BdF87b93B956154714109d9a5A22A6AD9B', INFURA_KEY))
 }
-//test()
+runPoC()
 
-const test2 = async () => {
+const test = async () => {
     var srcManager = await getManagerWP(PRIVATE_KEYsrc)
     //console.log(await getRoutesOf(srcManager.wallet.address))
 /*    console.log(await returnAssetToVault(
@@ -147,4 +151,4 @@ const test2 = async () => {
     ))
     //console.log(await getOrders('WETH', 'BAT'))
 }
-test2()
+//test()

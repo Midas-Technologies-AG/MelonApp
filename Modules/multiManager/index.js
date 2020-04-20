@@ -1,3 +1,7 @@
+// Willie Laubenheimer, hello@laubenheimer.eu
+// Midas Technologies AG
+
+//required functions
 const tokenABI = require('./src/wrapper/erc20Contract.abi.js')
 const multiManagerModule = './src/multiManager/multiManagerModule'
 

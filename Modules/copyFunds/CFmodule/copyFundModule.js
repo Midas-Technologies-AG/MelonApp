@@ -1,8 +1,12 @@
+// Willie Laubenheimer, hello@laubenheimer.eu
+// Midas Technologies AG
+
+//dependencies
 const Web3 = require('web3')
 var getTokenByAddress = require('@melonproject/protocol/lib/utils/environment/getTokenByAddress').getTokenByAddress
 const tradingABI = require('@melonproject/protocol/out/Trading.abi.json')
 
-const melonWrapper = '../wrapper/melonWrapper'
+const melonWrapper = '../../wrapper/melonWrapper'
 var getHoldingsOf = require(melonWrapper).getHoldingsOf
 var getHoldings = require(melonWrapper).getHoldings
 var getRoutesOf = require(melonWrapper).getRoutesOf
@@ -157,7 +161,7 @@ var copyFund = async (_fundAddress, _investAmount, _INFURA_KEY, _PRIVATE_KEY) =>
           )
           assets.push(holdings[holding].token.address)
           values.push(holdings[holding].quantity / Math.pow(1, holdings[holding].token.decimals))
-          //TimeCatcher till order executed. TODO
+          //TimeCatcher till order executed and freezeTime over. TODO
         }
       }
     }
@@ -196,7 +200,7 @@ var sellCopiedFund = async (_fundAddress, _INFURA_KEY, _PRIVATE_KEY) => {
             valueToken,
             'SELL')
       )
-      //TimeCatcher till order executed. TODO
+      //TimeCatcher till order executed and freezeTime over. TODO
     }
     //unlog in smartContract
     await unlogFund(_fundAddress, _INFURA_KEY, _PRIVATE_KEY)
