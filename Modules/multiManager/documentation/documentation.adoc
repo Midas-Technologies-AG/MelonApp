@@ -1,6 +1,25 @@
 = documentation of multimanager module
 
-This module aims to enable multiple persons to manage a fund on the `@melonproject/protocol`. 
+This module aims to enable multiple persons to manage a fund on the `@melonproject/protocol`.
+
+== preliminaries
+
+Use metamask browser extension (https://metamask.io/) as wallet and use https://faucet.kovan.network/ to get some kovan TESTNETether. There you also can export the PRIVATE_KEYs to integrate in the `.env.js` file.
+
+First of all you need:
+
+1. one invested fund (1 WETH)
+2. one multiSigWallet (min. 2 Owner)
+3. one invested fund wit multiManager
+
+=== 1. invested fund
+
+To invest into a fund you need the `PRIVATE_KEYsrc` variable set with a minimum balance of 3 ETH (approx. 1.5 ETH per fund).
+
+
+
+
+
 
 == Proof of Concept
 

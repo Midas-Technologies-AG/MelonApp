@@ -52,11 +52,14 @@ const {
 //########################
 const runPoC = async () => {
 	try {
+		////############## create enviroment############################
 		var manager = await getManager()
-		//console.log(await getHoldingsOf(mswAddress))
+		var fund = await setupInvestedFund2('MMbase')
+		console.log(fund)
+		//now you need to create a msw on https://wallet.gnosis.pm/
 
 		//############## CREATE MSW FUND SETUP ###########################
-		//console.log(await beginSetupMSW('<yourInput>', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		//console.log(await beginSetupMSW('multiManager', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//TODO confirm and execute via MSW! NEEDS 3 000 000 GAS !!!!
 		//console.log(await completeSetupMSW(mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//TODO confirm and execute via MSW! NEEDS 4 100 000 GAS !!!!
@@ -75,11 +78,11 @@ const runPoC = async () => {
 
 		//############## CREATE MSW TAKEORDER ############################
 		//console.log(await getHoldings()) 
-	    const buyAsset = await Protocol.getTokenBySymbol(manager, 'BAT')
+	    //const buyAsset = await Protocol.getTokenBySymbol(manager, 'BAT')
     	//console.log(buyAsset)
-    	const rate = await getRate({token: buyAsset})
+    	//const rate = await getRate({token: buyAsset})
     	//console.log(rate)
-    	const buyWETHamount = rate * 25
+    	//const buyWETHamount = rate * 25
 		//console.log(buyWETHamount)
 		//console.log(await makeOrder('BAT', buyWETHamount, 25, 'BUY'))
 		
@@ -96,10 +99,7 @@ const runPoC = async () => {
 }
 //########################
 runPoC()
-
-/*
-first MSW with fund 0xd0b4ad9EaD5918ed4CDe1D175ccD04F2eFd37ddD
-*/		
+	
 const test = async () => {
 	try {
 		var manager = await getManager()
