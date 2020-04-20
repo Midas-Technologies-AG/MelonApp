@@ -248,14 +248,14 @@ var makeOrderMSW = async (_assetSymbol, _amountBigNumber, action,  _multiSigWall
       [
       routes.trading.toString(),
       emptyAddress,
-      makerQuantity.token.address.toString(),
-      takerQuantity.token.address.toString(),
+      weth.address.toString(),
+      taker.address.toString(),
       emptyAddress,
       emptyAddress,
       ],
       [
-      makerQuantity.quantity.toString(),
-      takerQuantity.quantity.toString(),
+      makerAmount.toString(),
+      _amountBigNumber.toString(),
       '0',
       '0',
       '0',

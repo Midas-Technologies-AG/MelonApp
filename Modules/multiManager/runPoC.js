@@ -1,8 +1,8 @@
-// 1. TakeOrder Fundmanager address: 0x88d855bdf87b93b956154714109d9a5a22a6ad9b
-// 2. MakeOrder Fundmanager address: 0xa16067833E3466Fa9f9a617C1Df24a5b6a0b25DE
-// MWS Owner: 0x699E1818e9e83Fa31549911695D965F2fca8c461 and 0xa07AF3302B17F42F63a8111b33E390D80f3E67c8 
+// 1. TakeOrder Fundmanager address: 0x84099795457A4aAe655762c0070f196cf253e421
+// 2. MakeOrder Fundmanager address: 0x84099795457A4aAe655762c0070f196cf253e421
+// MWS Owner: 0x84099795457A4aAe655762c0070f196cf253e421 and 0x96981ebd57a99bDcaA4c86466058CD72C7459eb2 
 // required conf: 2
-// MSWaddress: 0xd0b4ad9EaD5918ed4CDe1D175ccD04F2eFd37ddD
+// MSWaddress: 0xC0c824cF518ED980c3782B8FB2112768A84F9fD0
 // Willie Laubenheimer, hello@laubenheimer.eu
 // Midas Technologies AG
 
@@ -63,12 +63,13 @@ const runPoC = async () => {
 		//TODO confirm and execute via MSW! NEEDS 3 000 000 GAS !!!!
 		//console.log(await completeSetupMSW(mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//TODO confirm and execute via MSW! NEEDS 4 100 000 GAS !!!!
-		console.log(await getRoutesOf(mswAddress))
-		console.log(await investInFund(mswAddress))
-		console.log(await getHoldingsOf(mswAddress))
+
+		//console.log(await getRoutesOf(mswAddress))
+		//console.log(await investInFund(mswAddress))
+		//console.log(await getHoldingsOf(mswAddress))
 
 		//############## CREATE MSW MAKEORDER ############################
-		//console.log(await makeOrderMSW('BAT', 25 * Math.pow(10, 18), 'BUY', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		console.log(await makeOrderMSW('BAT', 25 * Math.pow(10, 18), 'BUY', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//console.log(await getOrders())
 		//console.log(await getHoldings())
 		//console.log(await Protocol.getOasisDexOrder(manager,manager.deployment.thirdPartyContracts.exchanges.matchingMarket , {id: 37497}))
