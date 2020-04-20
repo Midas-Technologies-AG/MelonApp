@@ -297,6 +297,34 @@ var cancelOrder = async (id) => {
   }
 }
 
+var returnAssetToVault = async (_assetAddress, _INFURA_KEY, _PRIVATE_KEY) => {
+  try {
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
+    var web3 = new Web3(endpoint)
+
+    var routes = await getRoutesOf(manager.wallet.address)
+    var tradingContract = new web3.eth.Contract(tradingABI, routes.trading)
+    const inputData = await tradingContract.methods.returnAssetToVault(_assetAddress.toString()).encodeABI()
+    
+    const tx = {
+      from: manager.wallet.address, 
+      to: routes.trading,
+      gas: 1000000,
+      value: 0,
+      data: inputData
+    }
+    //sign and send TX
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
+    const signed = signPromise.rawTransaction
+    const sentTx = await web3.eth.sendSignedTransaction(signed)
+    return sentTx
+  }
+  catch (e) {
+    console.log('returnAssetToVault failed: ' + e)
+  }
+}
+
 const setupInvestedFund = async (fundName) => {
   var environment = await getManager();
   var balance = await getBalance(environment.wallet.address);
@@ -497,6 +525,7 @@ module.exports = {
   makeOrder,
   takeOrder,
   cancelOrder,
+  returnAssetToVault,
   setupInvestedFund,
   setupInvestedFund2,
   getManagerWP,

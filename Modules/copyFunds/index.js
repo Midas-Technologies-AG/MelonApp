@@ -8,7 +8,6 @@ var sellCopiedFund = require(CFmodule).sellCopiedFund
 var logFund = require(CFmodule).logFund
 var getLoggedFund = require(CFmodule).getLoggedFund
 var unlogFund = require(CFmodule).unlogFund
-var returnAssetToVault = require(CFmodule).returnAssetToVault
 //var removeOpenMake = require(CFmodule).removeOpenMake
 
 module.exports = {
@@ -17,6 +16,5 @@ module.exports = {
   logFund,
   getLoggedFund,
   unlogFund,
-  returnAssetToVault,
   //removeOpenMake
 }

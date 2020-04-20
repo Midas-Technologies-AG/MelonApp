@@ -2,6 +2,9 @@
 
 This Repository contains the modules `copyFunds` and `multiManager` for the `@melonproject/protocol` proposing a Proof of Concept for both modules.
 
+The `copyFund` modules aims to enable fundmanagers to buy all assets of a given fund with a given amount of `WETH` (wrapped Ether) proportional to the compisition of the copied fund.
+
+The `multiManager` module enables fundmanagement for multiple accounts as fund-manager.
 
 ## installation
 
@@ -19,18 +22,24 @@ To fix `...Error: Cannot find module './build/Release/scrypt'...` change `node_m
 
 ## possible ToDo's
 
+The following tasks have their approximated project-size in the brackets at the end.
+
 ### general
 
-- define functions for `Modules/index.js`
-- define and implement tests in `test.js`
+- define functions for `Modules/index.js` (medium)
+- define and implement tests in `test.js` (medium)
 
 
 ### copyFunds
 
-- research/implement/test copyFundsFunction with timer for exchange freeze after makeOrder
+- research/implement/test copyFundsFunction with timer for exchange freeze after makeOrder (big)
 
 
 ### multiManager
 
-- implement function to create gnosis MSW (multisignaturewallet)
+- implement function to create gnosis MSW (multisignaturewallet) (small)
+
+### wrapper
+
+- remove environmental variables from script and implement env var as inputs (small)
 

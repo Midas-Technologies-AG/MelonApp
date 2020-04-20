@@ -7,8 +7,6 @@
 // Midas Technologies AG
 
 //dependencies
-const dotenv = require('dotenv')
-dotenv.config()
 const Web3 = require('web3')
 
 var Protocol = require('@melonproject/protocol')
@@ -41,32 +39,39 @@ var completeSetupMSW = require(multiManagerModule).completeSetupMSW
 var makeOrderMSW = require(multiManagerModule).makeOrderMSW
 var takeOrderMSW = require(multiManagerModule).takeOrderMSW
 var cancelOrderMSW = require(multiManagerModule).cancelOrderMSW
+var returnAssetToVaultMSW = require(multiManagerModule).returnAssetToVaultMSW
+var redeemMSW = require(multiManagerModule).redeemMSW
+var redeem = require(multiManagerModule).redeem
+
+const {
+	PRIVATE_KEYsrc,
+	INFURA_KEY,
+	mswAddress	
+} = require('../.env.js')
 
 //########################
 const runPoC = async () => {
 	try {
 		var manager = await getManager()
-		const MSWaddress = '0xd0b4ad9EaD5918ed4CDe1D175ccD04F2eFd37ddD'
-		const MSWaddress2 = '0x481Cd58e3067c1A4b9314972a7C2d3e06120359D'
-		//console.log(await getHoldingsOf(MSWaddress))
+		//console.log(await getHoldingsOf(mswAddress))
 
 		//############## CREATE MSW FUND SETUP ###########################
-		//console.log(await beginSetupMSW('FirstMultiSigFund', MSWaddress))
+		//console.log(await beginSetupMSW('<yourInput>', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//TODO confirm and execute via MSW! NEEDS 3 000 000 GAS !!!!
-		//console.log(await completeSetupMSW(MSWaddress))
+		//console.log(await completeSetupMSW(mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//TODO confirm and execute via MSW! NEEDS 4 100 000 GAS !!!!
-		//console.log(await getRoutesOf(MSWaddress))
-		//console.log(await investInFund(MSWaddress))
-		//console.log(await getHoldingsOf(MSWaddress))
+		//console.log(await getRoutesOf(mswAddress))
+		//console.log(await investInFund(mswAddress))
+		//console.log(await getHoldingsOf(mswAddress))
 
 		//############## CREATE MSW MAKEORDER ############################
-		//console.log(await makeOrderMSW('BAT', 5 * Math.pow(10, 18), MSWaddress))
+		//console.log(await makeOrderMSW('BAT', 25 * Math.pow(10, 18), 'BUY', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//console.log(await getOrders())
 		//console.log(await getHoldings())
 		//console.log(await Protocol.getOasisDexOrder(manager,manager.deployment.thirdPartyContracts.exchanges.matchingMarket , {id: 37497}))
-		//console.log(await takeOrder(37497))
+		//console.log(await takeOrder(37509))
 		//console.log(await getHoldings())
-		//console.log(await getHoldingsOf(MSWaddress))
+		//console.log(await getHoldingsOf(mswAddress))
 
 		//############## CREATE MSW TAKEORDER ############################
 		//console.log(await getHoldings()) 
@@ -74,17 +79,17 @@ const runPoC = async () => {
     	//console.log(buyAsset)
     	const rate = await getRate({token: buyAsset})
     	//console.log(rate)
-    	const buyWETHamount = rate * 2.5
+    	const buyWETHamount = rate * 25
 		//console.log(buyWETHamount)
-		//console.log(await makeOrder('BAT', buyWETHamount, 7.5, 'SELL'))
+		//console.log(await makeOrder('BAT', buyWETHamount, 25, 'BUY'))
 		
-		//console.log(await takeOrderMSW(37503, MSWaddress))
-		//console.log(await getHoldingsOf(MSWaddress)) 
+		//console.log(await takeOrderMSW(37510, mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		//console.log(await getHoldingsOf(mswAddress)) 
 
 		//############## CREATE MSW CANCELORDER ##########################
-		//console.log(await makeOrderMSW('BAT', 7.5 * Math.pow(10, 18), MSWaddress))
-		//console.log(await cancelOrderMSW(37502, MSWaddress))
-		//console.log(await executeTx(26, MSWaddress))
+		//console.log(await makeOrderMSW('BAT', 7.5 * Math.pow(10, 18), mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		//console.log(await cancelOrderMSW(37502, mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		//console.log(await executeTx(26, mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 	} catch(e) {
 		console.log(e)
 	}
@@ -95,3 +100,15 @@ runPoC()
 /*
 first MSW with fund 0xd0b4ad9EaD5918ed4CDe1D175ccD04F2eFd37ddD
 */		
+const test = async () => {
+	try {
+		var manager = await getManager()
+		//console.log(await returnAssetToVaultMSW('0xB14c0f4a8150c028806bE46Afb5214daea870CB7', mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		//console.log(await redeemMSW(mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
+		console.log(await redeem(INFURA_KEY, PRIVATE_KEYsrc))
+	} catch(e) {
+		console.log(e)
+	}
+}
+//########################
+//test()

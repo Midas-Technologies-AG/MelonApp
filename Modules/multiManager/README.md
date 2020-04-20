@@ -37,3 +37,5 @@ module.exports = {
 }
 ```
 
+`PRIVATE_KEYsrc` needs to be one owner of the multiSig Wallet and needs to have an invested testfund so it can take the orders created by multiManager.
+ 

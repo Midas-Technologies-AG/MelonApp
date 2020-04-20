@@ -2,9 +2,7 @@
 // Midas Technologies AG
 
 //required functions
-const tokenABI = require('./src/wrapper/erc20Contract.abi.js')
 const multiManagerModule = './src/multiManager/multiManagerModule'
-
 var addOwnerMSW = require(multiManagerModule).multiSigAddOwner
 var confirmMSW = require(multiManagerModule).confirmTx
 var executeMSW = require(multiManagerModule).executeTx

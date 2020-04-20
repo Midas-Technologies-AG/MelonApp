@@ -8,6 +8,7 @@ const { createQuantity, appendDecimals, toBI } = require('@melonproject/token-ma
 const stringToBytes32 = require("@melonproject/protocol/lib/utils/helpers/stringToBytes32").stringToBytes32
 const fundFactory = require('@melonproject/protocol/out/FundFactory.abi.json')
 const tradingABI = require('@melonproject/protocol/out/Trading.abi.json')
+const participationABI = require('@melonproject/protocol/out/Participation.abi.json')
 
 var getManagerWP = require('../../wrapper/melonWrapper').getManagerWP
 var getRate = require('../../wrapper/melonWrapper').getRate
@@ -16,7 +17,12 @@ const tokenABI = require('../../wrapper/erc20Contract.abi.js')
 
 const multiSig = require('./contracts/multiSig.abi.js')
 
-const multiSigAddOwner = async (_newOwner, _multiSigWalletAddress), _INFURA_KEY, _PRIVATE_KEY => {
+// environmental variables are:
+// _multiSigWalletAddress
+// _INFURA_KEY
+// _PRIVATE_KEY
+
+const multiSigAddOwner = async (_newOwner, _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
   //creating environment
   var manager = await getManagerWP(_PRIVATE_KEY)
   const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
@@ -217,7 +223,7 @@ var { Exchanges, Contracts } = require('@melonproject/protocol/lib/Contracts')
 var { FunctionSignatures } = require('@melonproject/protocol/lib/contracts/fund/trading/utils/FunctionSignatures')
 var { emptyAddress } = require('@melonproject/protocol/lib/utils/constants/emptyAddress')
 
-var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
+var makeOrderMSW = async (_assetSymbol, _amountBigNumber, action,  _multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
   try {
     var manager = await getManagerWP(_PRIVATE_KEY)
     const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
@@ -230,9 +236,11 @@ var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress
     const exchangeIndex = await getExchangeIndex(manager, routes.trading, { exchange: Exchanges.MatchingMarket })
     const weth = Protocol.getTokenBySymbol(manager, 'WETH')
     const taker = await Protocol.getTokenBySymbol(manager, _assetSymbol)
-
     const rate = await getRate({token: taker})
     const makerAmount = rate * _amountBigNumber
+
+    var makerQuantity = (action == 'BUY') ? createQuantity(weth, makerAmount) : createQuantity(taker, _amountBigNumber);
+    var takerQuantity = (action == 'BUY') ? createQuantity(taker, _amountBigNumber) : createQuantity(weth, makerAmount);
 
     var inputData = await tradingContract.methods.callOnExchange(
       exchangeIndex,
@@ -240,14 +248,14 @@ var makeOrderMSW = async (_assetSymbol, _amountBigNumber, _multiSigWalletAddress
       [
       routes.trading.toString(),
       emptyAddress,
-      weth.address.toString(),
-      taker.address.toString(),
+      makerQuantity.token.address.toString(),
+      takerQuantity.token.address.toString(),
       emptyAddress,
       emptyAddress,
       ],
       [
-      makerAmount.toString(),
-      _amountBigNumber.toString(),
+      makerQuantity.quantity.toString(),
+      takerQuantity.quantity.toString(),
       '0',
       '0',
       '0',
@@ -418,6 +426,63 @@ var returnAssetToVaultMSW = async (_assetAddress, _multiSigWalletAddress, _INFUR
   }
 }
 
+var redeemMSW = async(_multiSigWalletAddress, _INFURA_KEY, _PRIVATE_KEY) => {
+  try {
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
+    var web3 = new Web3(endpoint)
+
+    var routes = await Protocol.managersToRoutes(manager, manager.deployment.melonContracts.version, _multiSigWalletAddress)
+    var mSigContract = new web3.eth.Contract(multiSig, _multiSigWalletAddress)
+    var participationContract = new web3.eth.Contract(participationABI, routes.participation)
+    const inputData = await participationContract.methods.redeem().encodeABI()
+    
+    const tx = {
+      from: manager.wallet.address, 
+      to: _multiSigWalletAddress,
+      gas: 5500000,
+      value: 0,
+      data: await mSigContract.methods.submitTransaction(routes.participation, 0, inputData).encodeABI()
+    }
+    //sign and send TX
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
+    const signed = signPromise.rawTransaction
+    const sentTx = await web3.eth.sendSignedTransaction(signed)
+    return true
+  }
+  catch (e) {
+    console.log('redeemMSW failed: ' + e)
+  }
+}
+
+var redeem = async( _INFURA_KEY, _PRIVATE_KEY) => {
+  try {
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
+    var web3 = new Web3(endpoint)
+
+    var routes = await Protocol.managersToRoutes(manager, manager.deployment.melonContracts.version, manager.wallet.address)
+    var participationContract = new web3.eth.Contract(participationABI, routes.participation)
+    const inputData = await participationContract.methods.redeem().encodeABI()
+    
+    const tx = {
+      from: manager.wallet.address, 
+      to: routes.participation,
+      gas: 5500000,
+      value: 0,
+      data: inputData
+    }
+    //sign and send TX
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
+    const signed = signPromise.rawTransaction
+    const sentTx = await web3.eth.sendSignedTransaction(signed)
+    return true
+  }
+  catch (e) {
+    console.log('redeem failed: ' + e)
+  }
+}
+
 module.exports = {
   multiSigAddOwner,
   confirmTx,
@@ -427,5 +492,7 @@ module.exports = {
   makeOrderMSW,
   takeOrderMSW,
   cancelOrderMSW,
-  returnAssetToVaultMSW
+  returnAssetToVaultMSW,
+  redeemMSW,
+  redeem
 }

@@ -1,5 +1,6 @@
 = documentation of multimanager module
 
-This module aims to enable multiple persons to manage a fund on the @melonproject/protocol 
+This module aims to enable multiple persons to manage a fund on the `@melonproject/protocol`. 
 
 == Proof of Concept
+

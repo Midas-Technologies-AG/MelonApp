@@ -10,12 +10,12 @@ var getHoldingsWP = require(mlnWrapper).getHoldingsWP
 var makeOrderWP = require(mlnWrapper).makeOrderWP
 var takeOrderWP = require(mlnWrapper).takeOrderWP
 var getOrders = require(mlnWrapper).getOrders
+var returnAssetToVault = require(mlnWrapper).returnAssetToVault
 
 var CFmodule = './CFmodule/copyFundModule'
 var getLoggedFund = require(CFmodule).getLoggedFund
 var logFund = require(CFmodule).logFund
 var unlogFund = require(CFmodule).unlogFund
-var returnAssetToVault = require(CFmodule).returnAssetToVault
 var removeOpenMake = require(CFmodule).removeOpenMake
 
 //environment needed!
@@ -125,13 +125,13 @@ const runPoC = async () => {
     console.log(' Fund Holdings of destManager: ')
     console.log(await getHoldingsWP(PRIVATE_KEYdest))
     console.log('########################COPY FUND##################################')
-    console.log(await copyFundPoC(INFURA_KEY, PRIVATE_KEYsrc, PRIVATE_KEYdest))
+    //console.log(await copyFundPoC(INFURA_KEY, PRIVATE_KEYsrc, PRIVATE_KEYdest))
     console.log('######################GET LOGGED FUND##############################')
-    console.log(await getLoggedFund(destManager.wallet.address, INFURA_KEY))
+    console.log(await getLoggedFund(destManager.wallet.address, INFURA_KEY, PRIVATE_KEYsrc))
     console.log('######################SELL COPIED FUND##############################')
-    console.log(await sellCopiedFundPoC('0x88D855BdF87b93B956154714109d9a5A22A6AD9B'))
+    //console.log(await sellCopiedFundPoC('0x88D855BdF87b93B956154714109d9a5A22A6AD9B', INFURA_KEY, PRIVATE_KEYsrc, PRIVATE_KEYdest))
     console.log('######################GET LOGGED FUND##############################')
-    console.log(await getLoggedFund('0x88D855BdF87b93B956154714109d9a5A22A6AD9B', INFURA_KEY))
+    console.log(await getLoggedFund('0x88D855BdF87b93B956154714109d9a5A22A6AD9B', INFURA_KEY, PRIVATE_KEYsrc))
 }
 runPoC()
 
