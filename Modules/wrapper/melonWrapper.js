@@ -15,6 +15,7 @@ var takeOasisDexOrder = require('@melonproject/protocol/lib/contracts/fund/tradi
 var setupFund = require('@melonproject/protocol/lib/contracts/fund/hub/transactions/setupFund').setupFund
 var withDifferentAccount = require('@melonproject/protocol/lib/utils/environment/withDifferentAccount').withDifferentAccount
 const fundFactory = require('@melonproject/protocol/out/FundFactory.abi.json')
+const participationABI = require('@melonproject/protocol/out/Participation.abi.json')
 
 const { createQuantity, appendDecimals, toBI } = require('@melonproject/token-math')
 var exchangeAggregate = require('@melonproject/exchange-aggregator')
@@ -508,6 +509,52 @@ var investInFund = async(_managerAddress) => {
   }
 }
 
+var redeem = async( _INFURA_KEY, _PRIVATE_KEY) => {
+  try {
+    var manager = await getManagerWP(_PRIVATE_KEY)
+    const endpoint = 'https://kovan.infura.io/v3/' + _INFURA_KEY
+    var web3 = new Web3(endpoint)
+
+    var routes = await Protocol.managersToRoutes(manager, manager.deployment.melonContracts.version, manager.wallet.address)
+    var participationContract = new web3.eth.Contract(participationABI, routes.participation)
+    const inputData = await participationContract.methods.redeem().encodeABI()
+    
+    const tx = {
+      from: manager.wallet.address, 
+      to: routes.participation,
+      gas: 5500000,
+      value: 0,
+      data: inputData
+    }
+    //sign and send TX
+    const signPromise = await web3.eth.accounts.signTransaction(tx, _PRIVATE_KEY)
+    const signed = signPromise.rawTransaction
+    const sentTx = await web3.eth.sendSignedTransaction(signed)
+    return true
+  }
+  catch (e) {
+    console.log('redeem failed: ' + e)
+  }
+}
+
+var freeze = async(_minutes) => {
+  try {
+    var d1 = new Date()
+    var start = d1.getTime()
+    console.log(start)
+    var checkBool = false
+    while(!checkBool) {
+      var d2 = new Date()
+      var now = d2.getTime()
+      if ((now - start) > (_minutes * 60 * 1000))
+        checkBool = true
+    }
+    return checkBool
+  } catch (e) {
+    console.log('freeze failed: ' + e)
+  }
+}
+
 module.exports = {
   getEnvironment,
   getManager,
@@ -532,5 +579,7 @@ module.exports = {
   getHoldingsWP,
   makeOrderWP,
   takeOrderWP,
-  investInFund
+  investInFund,
+  redeem,
+  freeze
 }

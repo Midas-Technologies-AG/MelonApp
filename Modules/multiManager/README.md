@@ -7,19 +7,20 @@ index.js should be fine but not reviewed nor bigger testing scale.
 
 ## available fucntions
 
-  addOwnerMSW,
-  confirmMSW,
-  executeMSW,
-  beginSetupMSW,
-  completeSetupMSW,
-  makeOrderMSW,
-  takeOrderMSW,
-  cancelOrderMSW,
-  returnAssetToVaultMSW
+  - addOwnerMSW
+  - confirmMSW
+  - executeMSW
+  - beginSetupMSW
+  - completeSetupMSW
+  - makeOrderMSW
+  - takeOrderMSW
+  - cancelOrderMSW
+  - returnAssetToVaultMSW
+  - redeemMSW
   
 Check the inputs at `multiManager/MMmodule/multiManagerModule.js`.
 
-Checkout `runPoC.js` or run `node runPoC` for testing if everything is set up well.
+Checkout `runPoC.js` or run `node runPoC` for testing if everything is set up well or go to `documentation` for detailed information.
 
 ## environment settings
 
