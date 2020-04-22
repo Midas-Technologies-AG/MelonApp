@@ -4,8 +4,18 @@ Willie Laszlo Laubenheimer, blockchain@laubenheimer.eu
 :icons: font
 :imagesdir: pix/
 
+{sp} +
+{sp} +
+{sp} +
 
 This module aims to enable multiple persons to manage a fund on the `@melonproject/protocol` from https://github.com/melonproject/protocol and the new interface to use the protocol is available here https://melon.avantgarde.finance/
+
+{sp} +
+{sp} +
+{sp} +
+
+NOTE: For tests we have used the KOVAN TESTNET and the deployment from `@melonproject/protocol/deployments/kovan-kyberPrice.json` from the `@melonproject/protocol` version `1.0.0-patched-1`.
+
 
 <<<
 
@@ -26,7 +36,7 @@ The following functions are contained in the `multiManager-module`:
 
 To handle this module it is recommended to mostly advance the gasLimit when confirming a proposed multiSigTransaction, otherwise it will run outOfGas and you need to redo the confirmation.
 
-TIP: After opening a `makeOrder`, the account is freezed for 30 minutes until one can make the next `makeOrder`
+TIP: After opening a `makeOrder` with 'BUY' flag, the account is freezed for 30 minutes, after someone takes the Order, until one can make the next `makeOrder`.
 
 <<<
 
@@ -120,7 +130,7 @@ Now you can run `console.log(await getRoutesOf(mswAddress))` and it will work fi
 
 We gonna invest from our baseAddress, because it is not possible yet to invest via a MSWwallet.
 
-Before you run the same command as before send via metamask to '0xd0A1E359811322d97991E03f863a0C30C2cF029C' 1 Ether. This is the WETH contract and by default it will deposit you 1 WETH. After successfull confirmation use these commands/this file: https://github.com/Midas-Technologies-AG/MelonApp/blob/3bc07153ed19c2173d891a1428fe5a7b80a5de6a/Modules/multiManager/runPoC.js
+Before you run the same command as before send via metamask to `0xd0A1E359811322d97991E03f863a0C30C2cF029C` 1 Ether. This is the WETH contract and by default it will deposit you 1 WETH. After successfull confirmation use these commands/this file: https://github.com/Midas-Technologies-AG/MelonApp/blob/3bc07153ed19c2173d891a1428fe5a7b80a5de6a/Modules/multiManager/runPoC.js
 
 
 == Proof of Concept
