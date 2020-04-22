@@ -14,6 +14,7 @@
     "module"
   ],
   "author": "Willie Laubenheimer",
+  "email": "blockchain@laubenheimer.eu",
   "license": "MIT",
   "dependencies": {
     "@melonproject/exchange-aggregator": "^0.1.20",

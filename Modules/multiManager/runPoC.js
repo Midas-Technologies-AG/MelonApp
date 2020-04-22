@@ -53,7 +53,7 @@ const {
 const runPoC = async () => {
 	try {
 		////############## create enviroment############################
-		//var manager = await getManager()
+		var manager = await getManager()
 		//var fund = await setupInvestedFund2('MMbase')
 		//console.log(fund)
 		//now you need to create a msw on https://wallet.gnosis.pm/
@@ -86,9 +86,9 @@ const runPoC = async () => {
     	//console.log(buyAsset)
     	//const rate = await getRate({token: buyAsset})
     	//console.log(rate)
-    	//const buyWETHamount = rate * 5
+    	//const buyWETHamount = rate * 55
 		//console.log(buyWETHamount)
-		//console.log(await makeOrder('BAT', buyWETHamount, 5, 'BUY'))
+		//console.log(await makeOrder('BAT', buyWETHamount, 55, 'BUY'))
 		
 		//console.log(await takeOrderMSW(37512, mswAddress, INFURA_KEY, PRIVATE_KEYsrc))
 		//console.log(await getHoldingsOf(mswAddress)) 

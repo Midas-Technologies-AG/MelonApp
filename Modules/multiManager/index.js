@@ -1,4 +1,4 @@
-// Willie Laubenheimer, hello@laubenheimer.eu
+// Willie Laubenheimer, blockchain@laubenheimer.eu
 // Midas Technologies AG
 
 //required functions

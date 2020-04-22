@@ -2,7 +2,7 @@
 
 This Repository contains the modules `copyFunds` and `multiManager` for the `@melonproject/protocol` proposing a Proof of Concept for both modules.
 
-The `copyFund` modules aims to enable fundmanagers to buy all assets of a given fund with a given amount of `WETH` (wrapped Ether) proportional to the compisition of the copied fund.
+The `copyFund` modules aims to enable fundmanagers to buy all assets of a given fund with a given amount of `WETH` (wrapped Ether) proportional to the composition of the copied fund.
 
 The `multiManager` module enables fundmanagement for multiple accounts as fund-manager.
 
@@ -27,7 +27,7 @@ The following tasks have their approximated project-size in the brackets at the 
 ### general
 
 - define functions for `Modules/index.js` (medium)
-- define and implement tests in `test.js` (medium)
+- define and implement tests in `Modules/test.js` (medium)
 
 
 ### copyFunds
@@ -38,6 +38,7 @@ The following tasks have their approximated project-size in the brackets at the 
 ### multiManager
 
 - implement function to create gnosis MSW (multisignaturewallet) (small)
+- implement function to check if an address is multiSig owner (medium-big)
 
 ### wrapper
 
